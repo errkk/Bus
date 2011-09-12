@@ -20,7 +20,11 @@ $(document).ready(function() {
         
         base.getBus = function( routeID,callback )
         {
-            $.getJSON("/bus/" + routeID, function( data ) {  
+            var stopID = 1045,
+                url = "/bus/" + stopID + '/' + routeID;
+                console.log( url );
+            
+            $.getJSON(url, function( data ) {  
                 callback( data );
             }); 
         }

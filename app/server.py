@@ -1,4 +1,4 @@
-import simplejson, urllib, json
+import simplejson, urllib, json,csv
 from bottle import route,run,static_file,template,debug
 
 
@@ -6,9 +6,9 @@ from bottle import route,run,static_file,template,debug
 
 
 
-@route('/bus/:number')
-def bus(number=88):
-    busstop = 51502
+@route('/bus/:busstop/:number')
+def bus(busstop = 51502,number=88):
+#    busstop = 51502
     url = 'http://countdown.tfl.gov.uk/stopBoard/%s' % busstop
 
     result = simplejson.load(urllib.urlopen(url))
@@ -29,11 +29,25 @@ def bus(number=88):
 
     return json.dumps( buses )
 
+
                 
 
 @route('/')
 def index():
-    return template('bus')
+    file = open('bus_stops_example.csv', 'rU')
+    stops = csv.reader( file, dialect=csv.excel_tab )
+
+    busstops = []
+
+    for row in stops:
+        thestop = row[0].split(',')
+        name = thestop[1]
+        id = thestop[0]
+
+        busstops.append( {'name':name,'id':id} )
+
+
+    return template('bus',{ 'stops' : busstops } )
 
 
 @route('/static/:path#.+#')
