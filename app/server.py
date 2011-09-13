@@ -16,7 +16,7 @@ def bus(busstop = 51502,number=88):
     result = simplejson.load( jsonfile )
 
     if result:
-        print 'JSON'
+        print 'Getting stops'
     else:
         print 'Stops JSON Fail'
 
@@ -41,7 +41,7 @@ def bus(busstop = 51502,number=88):
 
 @route('/stops/:lat/:lng')
 def stops( lat=51.4612,lng=-0.1402 ):
-    print '%s - %s' % ( lat,lng )
+    print 'Searching near %s - %s' % ( lat,lng )
     dist = 0.003
 
     swLat = float(lat) - dist
@@ -49,17 +49,13 @@ def stops( lat=51.4612,lng=-0.1402 ):
     neLat = float(lat) + dist
     neLng = float(lng) + dist
 
-    print float(swLat)
-    print float(swLng)
-    print float(neLat)
-    print float(neLng)
 
     url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
         % ( swLat, swLng, neLat, neLng )
 
     result = simplejson.load(urllib.urlopen(url))
 
-    print len(result['markers'])
+    print 'Found %d busstops' % len(result['markers'])
 
     stops = []
 
@@ -89,10 +85,10 @@ def index():
 
 @route('/static/:path#.+#')
 def server_static(path):
-    return static_file(path, root='/www/bus/public/')
+    return static_file(path, root='../public/')
 
 
 
 
-debug(True)
-run( host='mbp.local', port=81, reloader=True )
+#debug(True)
+run( server='tornado' )
