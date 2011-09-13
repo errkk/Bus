@@ -92,7 +92,7 @@ h3{font-size:1.1em; color:#3e2019; font-weight: 500;}
     #screen p{ margin:0 20px; text-shadow:0 1px 3px #f74; font-size: 2.3em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
 
 
-
+    #map_canvas{width:500px; height: 400px; margin:20px auto; background:gainsboro;}
 
 
 
