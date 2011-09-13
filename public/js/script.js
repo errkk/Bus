@@ -53,7 +53,7 @@ $(document).ready(function() {
                 return false;
 
             // create a single info window object
-            infoWindow = new google.maps.InfoWindow();
+            base.infoWindow = new google.maps.InfoWindow();
 
             //Google maps defaults
             var myOptions = {
@@ -81,8 +81,6 @@ $(document).ready(function() {
                 // Bind addMarkers method to tilesloaded event
 //                google.maps.event.addListenerOnce( base.map, 'tilesloaded', base.addMarkers );
             });
-            
-            
 
         }
         
@@ -134,8 +132,14 @@ $(document).ready(function() {
                 // Store marker objects in an array to manipulate them later
                 base.markers[id] = marker;
                 
-                google.maps.event.addListener(marker, 'click', function( something,selse ) {
+                google.maps.event.addListener(marker, 'click', function() {
                     
+                    
+                    base.infoWindow.setContent( title );
+                    base.infoWindow.open( base.map,this );
+                    
+                    
+                    // change this to click events for the routes
                     base.getBus( id, 88, function( data ){
                         
                         var found = data.length;
@@ -191,36 +195,8 @@ $(document).ready(function() {
                     'maximumAge':0
                 });
             
-            
-            // Loop buses
-            base.$buses.each( function(){
-
-                $(this).find('li a').bind( 'click', function(event){
-                    var routeID = $(this).data('route');
-                    
-                    base.getBus( routeID, function( data ){
-                        
-                        var found = data.length;
-                        
-                        if( !found ){
-                            alert( 'Bugger looks like a long wait for a fucking ' + routeID + '!!' );
-                        }
-                            
-                        for( item in data ){
-                            var el = document.createElement( 'p' );
-                            el.id = item;
-                            el.innerHTML = data[item].route + ' ' + data[item].wait;
-                            base.$screen.append( $(el).hide().fadeIn() );
-                        }
-                        
-                    } );
-                    
-                    event.preventDefault();
-                } );
-                
-                
-            } );
         };
+        
         base.init();
     };
     

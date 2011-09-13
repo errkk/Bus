@@ -84,7 +84,7 @@ def index():
         busstops.append( {'name':name,'id':id} )
     
 
-    return template('bus',{ 'stops' : busstops } )
+    return template( 'bus' )
 
 
 @route('/static/:path#.+#')
@@ -95,4 +95,4 @@ def server_static(path):
 
 
 debug(True)
-run( host='localhost', port=81, reloader=True )
+run( host='mbp.local', port=81, reloader=True )
