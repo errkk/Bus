@@ -86,11 +86,14 @@ h1{font-size:3.5em; color:#3e2019; font-weight: bold;}
 h2{font-size:1.8em; border-bottom:dashed #ccc 1px;}
 h3{font-size:1.1em; color:#3e2019; font-weight: 500;}
 
-#container{padding:0 10%;}
+#container{padding:0 5%;}
 
-#screen{background:#111; width:100%; padding:10px 0; border-radius:8px; border:5px solid #000; box-shadow:0 3px 6px #888;}
-    #screen p{ margin:0 20px; text-shadow:0 1px 3px #f74; font-size: 2.3em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
-
+#screen{background:#111; width:100%; padding:10px 0; border-radius:8px; border:5px solid #000; box-shadow:0 3px 6px #888; overflow:hidden;}
+    #screen p{ clear:both;margin:0 20px; text-shadow:0 1px 3px #f74; font-size: 2em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
+        
+        #screen p .destination{float:left;}
+        #screen p .countdown{float:right;}
+        #screen p .route{width:4em;float:left;}
 
     #map_canvas{width:100%; height: 400px; margin:20px auto; background:gainsboro;}
 

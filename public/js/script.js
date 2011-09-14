@@ -20,11 +20,12 @@ $(document).ready(function() {
         
         base.markers = [];
         
+        base.doscrollything = true;
         
-        base.getBus = function( stopID, routeID, callback )
+        
+        base.getBuses = function( stopID, callback )
         {
-            var url = "/bus/" + stopID + '/' + routeID;
-                console.log( url );
+            var url = "/bus/" + stopID;
             
             $.getJSON(url, function( data ) {  
                 callback( data );
@@ -139,21 +140,30 @@ $(document).ready(function() {
                     base.infoWindow.open( base.map,this );
                     
                     
+                    
                     // change this to click events for the routes
-                    base.getBus( id, 88, function( data ){
-                        
-                        var found = data.length;
-                        
-                        if( !found ){
-                            alert( 'Bugger looks like a long wait for a fucking ' + routeID + '!!' );
-                        }
+                    base.getBuses( id, function( data ){
+
+                        var count = data.length,
+                            items = [];
                             
-                        for( item in data ){
-                            var el = document.createElement( 'p' );
-                            el.id = item;
-                            el.innerHTML = data[item].route + ' ' + data[item].wait;
-                            base.$screen.append( $(el).hide().fadeIn() );
+                        base.$screen.html('');
+                       
+                        for( i = 0; i <= count; i++ ){
+                            
+                            var el = document.createElement( 'p' ),
+                                val = data[i];
+                            if( val ){
+                                el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
+                            
+                                base.$screen.append( $(el).hide().fadeIn() );
+                            
+                                items[i] = $(el);
+                            }
+                            
                         }
+                        
+                        
                         
                     } );
                 });
