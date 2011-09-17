@@ -32,6 +32,7 @@
         <div data-role="page" id="foo"> 
 
             <div data-role="header"> 
+                
                 <h1>Find a bus stop</h1> 
             </div><!-- /header --> 
 
@@ -41,15 +42,17 @@
             
             <div data-role="footer" class="ui-bar" data-position="fixed"data-theme="c" >
                 <a href="" id="relocate" data-role="button" data-icon="refresh">Relocate</a>
+                <a href="#list" data-role="button" data-transition="pop" data-icon="grid">List</a>
                 <a href="#about" data-role="button" data-transition="pop" data-icon="info">About</a>
             </div>
         </div><!-- /page one --> 
 
 
         <!-- Start of second page: #two --> 
-        <div data-role="page" id="two" data-theme="a"> 
+        <div data-role="page" id="two" data-theme="a" data-position="inline"> 
 
             <div data-role="header"> 
+                <a href="/" data-icon="arrow-l">Back</a>
                 <h1>Arrivals for <span id="busstopname"></span></h1> 
             </div><!-- /header --> 
 
@@ -61,13 +64,28 @@
 
             </div><!-- /content --> 
 
-            <div data-role="footer"> 
-                <h4>Page Footer</h4> 
-            </div><!-- /footer --> 
         </div><!-- /page two --> 
 
 
-        <!-- Start of third page: #popup --> 
+        <div data-role="page" id="list"> 
+
+            <div data-role="header" data-theme="a"> 
+                
+                <h1>Bus Stops</h1> 
+            </div><!-- /header --> 
+
+            <div data-role="content" data-theme="c">	
+                <ul id="stop_list" data-role="listview" data-theme="c">
+                    <li><a href="safsd">asdfasdf</a></li>
+                </ul>		
+                <p><a href="#one" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a></p>	
+            </div><!-- /content --> 
+
+            <div data-role="footer"> 
+                <h4>Page Footer</h4> 
+            </div><!-- /footer --> 
+        </div><!-- /page popup --> 
+        
         <div data-role="page" id="about"> 
 
             <div data-role="header" data-theme="a"> 

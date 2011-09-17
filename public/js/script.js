@@ -88,10 +88,25 @@ $(document).ready(function() {
                     // Create markers and attach them to the map
                     base.addMarkers();
 
-                    // Bind addMarkers method to tilesloaded event
+                    var len = base.busStops.length;
+                    for (var i = 0; i < len; i++) {
+                        
+                         var $li = $( '<li><a href="na">' + base.busStops[i].name + '</a></li>' ).data( 'id',base.busStops[i].id );
+                        $('#stop_list').append( $li );
+                    }
                 });
                 
+                
             } );
+            
+            
+            
+            // Add listing view to for busstops
+            
+//            var listElement = 
+
+           
+            
             
 
         }
@@ -244,6 +259,8 @@ $(document).ready(function() {
                         'maximumAge':0
                     });
             }
+            
+            
             
 //            get_position();
             
