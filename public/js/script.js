@@ -81,6 +81,7 @@ $(document).ready(function() {
                 
                 base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
                     $( '#map_canvas' ).removeClass('loading');
+                    $('#relocate').removeClass('ui-btn-active loading');
                     // store busstops in object so addMarkers can use them
                     base.busStops = data;
 
@@ -130,15 +131,36 @@ $(document).ready(function() {
 
             var createMaker = function( map, myLatLng, id, title, i, letter )
             {
-                
-                // Create marker object for the retailer
-                var marker = new google.maps.Marker({
-                    position: myLatLng,
-                    map: map,
-                    title: title,
-                    id: id,
-                    letter: letter
-                });
+                var letterSwitch = function( letter ){
+                        var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+                            
+                        try{
+                            var number = letters.indexOf( letter );
+                            
+                            if( number ){
+                                return ( number * 26 );
+                            }else{
+                                return 0;
+                            }
+                        }catch(err){ console.log(err); }
+                    },
+
+
+                    image = new google.maps.MarkerImage(
+                        '/static/img/design/ico-stops.png',
+                        new google.maps.Size( 21,26 ), // Size
+                        new google.maps.Point( 0, letterSwitch( letter ) ) // Origin
+                    ),
+
+                    // Create marker object for the retailer
+                    marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map: map,
+                        title: title,
+                        id: id,
+                        letter: letter,
+                        icon: image
+                    });
                 
                 // Store marker objects in an array to manipulate them later
                 base.markers[id] = marker;
@@ -149,11 +171,11 @@ $(document).ready(function() {
                     
                     $('#busstopname').html( title );
                     
-                    base.infoWindow.setContent( title );
-                    base.infoWindow.open( base.map,this );
+//                    base.infoWindow.setContent( title );
+//                    base.infoWindow.open( base.map,this );
                     
                     
-                    
+                    base.$screen.html('<p>Loading</p>');
                     // change this to click events for the routes
                     base.getBuses( id, function( data ){
 
@@ -169,7 +191,7 @@ $(document).ready(function() {
                             if( val ){
                                 el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
                             
-                                base.$screen.append( $(el).hide().fadeIn() );
+                                base.$screen.append( $(el) );
                             
                                 items[i] = $(el);
                             }
@@ -227,11 +249,12 @@ $(document).ready(function() {
             
   
                 $( '#relocate' ).live( 'vclick', function(event){
+                    $(this).addClass('ui-btn-active loading');
                     get_position();
                 });
                 
                 $('#two').live( 'swiperight', function(){
-                    $.mobile.changePage('/',{ reverse:true});
+                    $.mobile.changePage('/',{reverse:true});
                 } );
   
             
