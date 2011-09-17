@@ -79,6 +79,10 @@ def index():
 def server_static(path):
     return static_file(path, root='../public/')
 
+@route('/favicon.ico')
+def favicon():
+    return ''
+
 
 debug(True)
 run( server='tornado',port=80 )
