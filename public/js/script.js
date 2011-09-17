@@ -5,6 +5,9 @@ $(document).ready(function() {
 });
 
 
+
+
+
 (function($){
     $.bus = function(el, options){
         var base = this;
@@ -59,7 +62,8 @@ $(document).ready(function() {
             //Google maps defaults
             var myOptions = {
                 zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true
             };
 
             // Create map object in map_canvas element
@@ -71,17 +75,23 @@ $(document).ready(function() {
 
             // add markers when the tiles are loaded
             
-            base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
+            google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){
                 
-                // store busstops in object so addMarkers can use them
-                base.busStops = data;
                 
-                // Create markers and attach them to the map
-                base.addMarkers();
                 
-                // Bind addMarkers method to tilesloaded event
-//                google.maps.event.addListenerOnce( base.map, 'tilesloaded', base.addMarkers );
-            });
+                base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
+                    $( '#map_canvas' ).removeClass('loading');
+                    // store busstops in object so addMarkers can use them
+                    base.busStops = data;
+
+                    // Create markers and attach them to the map
+                    base.addMarkers();
+
+                    // Bind addMarkers method to tilesloaded event
+                });
+                
+            } );
+            
 
         }
         
@@ -135,6 +145,9 @@ $(document).ready(function() {
                 
                 google.maps.event.addListener(marker, 'click', function() {
                     
+                    $.mobile.changePage($("#two"));
+                    
+                    $('#busstopname').html( title );
                     
                     base.infoWindow.setContent( title );
                     base.infoWindow.open( base.map,this );
@@ -195,15 +208,34 @@ $(document).ready(function() {
         base.init = function(){
             base.options = $.extend({},$.bus.defaultOptions, options);
             
-            // Get location and run retailermap as callback
-            navigator.geolocation.getCurrentPosition(
-                base.retailer_map,
-                errorGettingPosition,
-                {
-                    'enableHighAccuracy':true,
-                    'timeout':10000,
-                    'maximumAge':0
+            var get_position = function(){
+                // TODO: show a loading gif
+                $( '#map_canvas' ).addClass('loading');
+                // 
+                // Get location and run retailermap as callback
+                navigator.geolocation.getCurrentPosition(
+                    base.retailer_map, // call back function
+                    errorGettingPosition,
+                    {
+                        'enableHighAccuracy':true,
+                        'timeout':10000,
+                        'maximumAge':0
+                    });
+            }
+            
+//            get_position();
+            
+  
+                $( '#relocate' ).live( 'vclick', function(event){
+                    get_position();
                 });
+                
+                $('#two').live( 'swiperight', function(){
+                    $.mobile.changePage('/',{ reverse:true});
+                } );
+  
+            
+            
             
         };
         

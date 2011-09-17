@@ -1,7 +1,7 @@
 /* HTML5 ✰ Boilerplate
  * ==|== normalize ==========================================================
  */
-
+/*
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
 audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
 audio:not([controls]) { display: none; }
@@ -59,7 +59,7 @@ input:valid, textarea:valid {  }
 input:invalid, textarea:invalid { background-color: #f0dddd; }
 
 table { border-collapse: collapse; border-spacing: 0; }
-td { vertical-align: top; }
+td { vertical-align: top; }*/
 
 
 /* ==|== primary styles =====================================================
@@ -82,23 +82,33 @@ td { vertical-align: top; }
     
 /* Type ______________________________________________________________________*/
 h1,h2,h3{font-family: 'Arial', sans-serif; font-weight:300; text-transform: uppercase;}
-h1{font-size:3.5em; color:#3e2019; font-weight: bold;}
+/*h1{font-size:3.5em; color:#3e2019; font-weight: bold;}
 h2{font-size:1.8em; border-bottom:dashed #ccc 1px;}
-h3{font-size:1.1em; color:#3e2019; font-weight: 500;}
+h3{font-size:1.1em; color:#3e2019; font-weight: 500;}*/
 
-#container{padding:0 5%;}
 
-#screen{background:#111; width:100%; padding:10px 0; border-radius:8px; border:5px solid #000; box-shadow:0 3px 6px #888; overflow:hidden;}
-    #screen p{ clear:both;margin:0 20px; text-shadow:0 1px 3px #f74; font-size: 2em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
+#one .ui-content{background:#555;}
+#two .ui-content{padding:0;}
+#screen{background:#111; width:100%; margin-bottom:10px; border:5px solid #000; overflow:hidden;}
+    #screen p{ clear:both; padding:0 15px; text-shadow:0 1px 3px #f74; font-size: 1.1em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
         
         #screen p .destination{float:left;}
         #screen p .countdown{float:right;}
-        #screen p .route{width:4em;float:left;}
+        #screen p .route{width:5em;float:left;}
 
-    #map_canvas{width:100%; height: 400px; margin:20px auto; background:gainsboro;}
+#map_canvas{width:100%; height: 100%; position:absolute; top:40px;left:0; bottom:0; margin:0;}
+.loading{background: #555 url(/static/img/design/loading.gif) 50% 50% no-repeat;}
+    
 
 
-
+/* Portrait */
+@media screen and (orientation:portrait) {
+    #screen p{font-size:1em; text-shadow:none;}
+}
+/* Landscape */
+@media screen and (orientation:landscape) {
+    #screen p{font-size:1.3em;}
+}
 
 
 
