@@ -96,5 +96,5 @@ def favicon():
 
 
 
-debug(True)
+#debug(True)
 run( server='tornado',port=80 )

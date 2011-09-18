@@ -1,7 +1,9 @@
 CACHE MANIFEST
-# rev 20
+# rev 30 0149302390945029309
+
 
 CACHE:
+/
 /static/css/style.css
 /static/js/script.js
 /static/img/design/ico-stops.png
@@ -11,6 +13,14 @@ CACHE:
 /static/img/design/loading.gif
 /static/img/design/btn-loading.gif
 /static/fonts/dotmat-webfont.eot
+/static/fonts/dotmat-webfont.svg
+/static/fonts/dotmat-webfont.ttf
+/static/fonts/dotmat-webfont.woff
+
+http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js
+http://code.jquery.com/jquery-1.6.2.min.js
+http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css
+http://code.jquery.com/mobile/1.0b3/images/icons-18-white.png
 
 
 NETWORK:

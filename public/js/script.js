@@ -34,6 +34,8 @@ $(document).ready(function() {
             
             $.getJSON(url, function( data ) {  
                 callback( data );
+            }).error(function(){
+                callback(false);
             }); 
         }
         
@@ -41,7 +43,7 @@ $(document).ready(function() {
         {
             var url = "/stops/" + lat + '/' + lng + '/' + base.range;
             
-            $.getJSON( encodeURI(url), function( data ) {  
+            $.getJSON( url, function( data ) {  
                 callback( data );
             }).error(function(){
                 callback(false);
@@ -66,21 +68,30 @@ $(document).ready(function() {
                 var count = data.length,
                     items = [];
 
-                base.$screen.html('');
+                if( data && count > 0 ){
 
-                for( i = 0; i <= count; i++ ){
+                    base.$screen.html('');
 
-                    var el = document.createElement( 'p' ),
-                        val = data[i];
-                    if( val ){
-                        el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
+                    for( i = 0; i <= count; i++ ){
 
-                        base.$screen.append( $(el) );
+                        var el = document.createElement( 'p' ),
+                            val = data[i];
+                        if( val ){
+                            el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
 
-                        items[i] = $(el);
+                            base.$screen.append( $(el) );
+
+                            items[i] = $(el);
+                        }
+
                     }
-
+                
+                }else{
+                    
+                    $('#msg').find('.message').html('No buses found from here');
+                        $.mobile.loadPage( $('#msg'), { transition:'pop' } );
                 }
+            
 
 
 
@@ -137,7 +148,7 @@ $(document).ready(function() {
                     $( '#map_canvas' ).removeClass('loading');
                     $('#relocate').removeClass('ui-btn-active loading');
                     
-                    if( data ){
+                    if( data && data.length > 0 ){
 
                         // store busstops in object so addMarkers can use them
                         base.busStops = data;
@@ -161,26 +172,20 @@ $(document).ready(function() {
                                 } );
                             $stopList.append( $li );
                         }
-
+                        try{
                         $stopList.listview('refresh');
+                        }catch(e){
+                            
+                        }
                     }else{
-                        alert('Could not find any bus stops :-(');
+                        $('#msg').find('.message').html('Could not find any bus stops');
+                        $.mobile.loadPage( $('#msg'), { transition:'pop' } );
                     }
                 });
                 
                 
             } );
             
-            
-            
-            // Add listing view to for busstops
-            
-//            var listElement = 
-
-           
-            
-            
-
         }
         
         
@@ -309,9 +314,6 @@ $(document).ready(function() {
             
             
             
-//            get_position();
-            
-  
                 $( '#relocate' ).live( 'vclick', function(event){
                     $(this).addClass('ui-btn-active loading');
                     get_position();
@@ -319,7 +321,6 @@ $(document).ready(function() {
                 
                 
                 $( '#slider' ).live( 'change', function(event){
-                    
                     base.range = ( $(this).val() / 1000 );
                 });
                 
