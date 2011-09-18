@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 15
+# rev 17
 
 CACHE:
 /static/css/style.css
@@ -8,12 +8,10 @@ CACHE:
 /static/img/design/ico-direction.png
 /static/img/design/apple-touch-icon.png
 /static/img/design/home.png
-http://fonts.googleapis.com/*
-http://code.jquery.com/mobile/1.0b3/*
-http://maps.google.com/maps/api/*
-http://code.jquery.com/*
+/static/img/design/loading.gif
+/static/img/design/btn-loading.gif
+/static/fonts/dotmat-webfont.eot
 
 
 NETWORK:
-/bus/*
-/stops/*
+*
