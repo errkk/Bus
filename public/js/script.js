@@ -60,6 +60,9 @@ $(document).ready(function() {
             $.mobile.changePage( $("#two") );
 
             $('#busstopname').html( base.markers[id].title );
+            
+            // save obj for saving in local storage
+            base.currentStop = base.markers[id];
 
             base.$screen.html('<p>Loading</p>');
             // change this to click events for the routes
@@ -89,7 +92,7 @@ $(document).ready(function() {
                 }else{
                     
                     $('#msg').find('.message').html('No buses found from here');
-                        $.mobile.loadPage( $('#msg'), { transition:'pop' } );
+                        $.mobile.loadPage( $('#msg'), {transition:'pop'} );
                 }
             
 
@@ -179,7 +182,7 @@ $(document).ready(function() {
                         }
                     }else{
                         $('#msg').find('.message').html('Could not find any bus stops');
-                        $.mobile.loadPage( $('#msg'), { transition:'pop' } );
+                        $.mobile.loadPage( $('#msg'), {transition:'pop'} );
                     }
                 });
                 
@@ -289,12 +292,47 @@ $(document).ready(function() {
 
 
         
+        base.populatefavs = function()
+        {
+            if( !base.myBuses ){
+                return false;
+            }
+            
+            // Add saved items to list
+            var len = base.myBuses.length,
+            $stopList = $('#fav_stop_list');
+
+            $stopList.html('');
+
+            // Loop busstops and add them to the list
+            for (var i = 0; i < len; i++) {
+
+                var $li = $( '<li><a>' + base.myBuses[i].name + ' <span class="letter">' + base.myBuses[i].letter + '</span> <span class="direction ' + base.myBuses[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                .data( 'id',base.myBuses[i].id )
+                .data( 'role', 'list-divider' ).click( function(){
+                    base.busStopClick( $(this).data('id') );
+                } );
+                $stopList.append( $li );
+            }
+            try{
+                $stopList.listview('refresh');
+            }catch(e){
+
+            }
+        }
+        
         
         
         base.init = function(){
             base.options = $.extend({},$.bus.defaultOptions, options);
             
+            // Find save stops
+            var myBuses = JSON.parse( localStorage.getItem( 'mybuses' ) );
             
+            if( myBuses ){
+                // stuff is saved so load it in
+                base.myBuses = myBuses;
+            }
             
             
             var get_position = function(){
@@ -327,6 +365,24 @@ $(document).ready(function() {
                 $('#two, #list').live( 'swiperight', function(){
                     $.mobile.changePage('/',{reverse:true});
                 } );
+                
+                $('#btnSave').live( 'vclick', function(event){
+                    
+                    if( typeof( base.myBuses ) == 'array' ){
+                        base.myBuses.push( base.currentStop );
+                    }else{
+                        base.myBuses = [];
+                        base.myBuses.push( base.currentStop );
+                    }
+                    
+                    localStorage.setItem( 'mybuses', JSON.stringify(base.myBuses) );
+                    
+                    base.populatefavs();
+                    
+                    
+                } );
+                
+                base.populatefavs();
   
             
             

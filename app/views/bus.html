@@ -1,12 +1,13 @@
 <!doctype html>
 <html class="no-js" lang="en" manifest="/cache.manifest">
     <head>
+
         <meta charset="utf-8">
 
         <meta name="viewport" content="width=device-width, initial-scale=1"> 
         <meta name="apple-mobile-web-app-capable" content="yes"> 
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        
+
         <title>Wheres the bus?</title>
 
         <link rel="apple-touch-startup-image" href="/static/img/design/home.png" />
@@ -32,15 +33,15 @@
         <div data-role="page" id="foo"> 
 
             <div data-role="header"> 
-                
+
                 <h1>Find a bus stop</h1> 
             </div><!-- /header --> 
 
             <div data-role="content" id="one">	
                 <div id="map_canvas"></div>
             </div><!-- /content --> 
-            
-            <div data-role="footer" class="ui-bar" data-position="fixed"data-theme="c" >
+
+            <div data-role="footer" class="ui-bar" data-position="fixed" data-theme="c" >
                 <a href="" id="relocate" data-role="button" data-icon="refresh">Relocate</a>
                 <a href="#list" data-role="button" data-transition="pop" data-icon="grid">List</a>
                 <a href="#about" data-role="button" data-transition="pop" data-icon="info">About</a>
@@ -52,7 +53,6 @@
         <div data-role="page" id="two" data-theme="a" data-position="inline"> 
 
             <div data-role="header"> 
-                <a href="/" data-icon="arrow-l">Back</a>
                 <h1>Arrivals for <span id="busstopname"></span></h1> 
             </div><!-- /header --> 
 
@@ -60,7 +60,10 @@
                 <div id="screen">
                     <p>Loading</p>
                 </div>
-                <p><a href="/" data-direction="reverse" data-role="button" data-theme="b">Back to Map</a></p>	
+                <div data-role="footer" class="ui-bar" data-position="fixed" data-theme="a" >
+                    <a href="/" data-role="button" data-icon="back">Back</a>
+                    <a href="#save" id="btnSave" data-role="button" data-icon="plus">Save</a>
+                </div>
 
             </div><!-- /content --> 
 
@@ -70,7 +73,6 @@
         <div data-role="page" id="list"> 
 
             <div data-role="header" data-theme="a" data-position="inline"> 
-                <a href="/" data-icon="arrow-l">Back</a>
                 <h1>Bus Stops</h1> 
             </div><!-- /header --> 
 
@@ -80,11 +82,24 @@
                 <p><a href="#one" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a></p>	
             </div><!-- /content --> 
 
-            <div data-role="footer"> 
-                <h4>Page Footer</h4> 
-            </div><!-- /footer --> 
         </div><!-- /page popup --> 
-        
+
+
+        <div data-role="page" id="save"> 
+
+            <div data-role="header" data-theme="a" data-position="inline"> 
+                <h1>My Bus Stops</h1> 
+            </div><!-- /header --> 
+
+            <div data-role="content" data-theme="c">	
+                <ul id="fav_stop_list" data-role="listview" data-theme="c">
+                </ul>		
+                <p><a href="#one" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a></p>	
+            </div><!-- /content --> 
+
+        </div><!-- /page popup --> 
+
+
         <div data-role="page" id="about"> 
 
             <div data-role="header" data-theme="a"> 
@@ -101,13 +116,10 @@
                 <p><a href="#one" data-rel="back" data-role="button" data-inline="true" data-icon="back">Back</a></p>	
             </div><!-- /content --> 
 
-            <div data-role="footer"> 
-                <h4>Page Footer</h4> 
-            </div><!-- /footer --> 
         </div><!-- /page popup --> 
-        
-        
-        
+
+
+
         <div data-role="page" id="msg"> 
 
             <div data-role="header" data-theme="a"> 
