@@ -1,12 +1,12 @@
 CACHE MANIFEST
-# rev 10
+# rev 11
 
 NETWORK:
 /bus/*
 /stops/*
 
 CACHE:
-
+/
 /static/css/style.css
 /static/js/script.js
 
