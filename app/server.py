@@ -5,14 +5,16 @@ from bottle import route,run,static_file,template,debug
 class BusStuff:
     dist = 0.003
 
-    def getStops(self,lat,lng):
+    def getStops(self,lat,lng, dist):
 
+        if dist:
+            self.dist = float(dist)
         print 'Searching near %s - %s' % ( lat,lng )
 
         swLat = float(lat) - self.dist
-        swLng = float(lng) - self.dist
+        swLng = float(lng) - ( self.dist * 1.4 )
         neLat = float(lat) + self.dist
-        neLng = float(lng) + self.dist
+        neLng = float(lng) + ( self.dist * 1.4 )
 
 
         url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
@@ -25,7 +27,8 @@ class BusStuff:
         stops = []
 
         for item in result['markers']:
-            stops.append( { 'id':item['id'], 'name':item['name'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
+
+            stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
 
         return stops
 
@@ -65,9 +68,10 @@ def bus(busStop = 51502):
     return json.dumps( buses )
 
 
-@route('/stops/:lat/:lng')
-def stops( lat=51.4612,lng=-0.1402 ):
-    return json.dumps( BusStuff.getStops(lat,lng) )
+@route('/stops/:lat/:lng/:dist')
+def stops( lat=51.4612,lng=-0.1402,dist=0.003 ):
+    
+    return json.dumps( BusStuff.getStops(lat,lng,dist) )
 
 
 @route('/')
@@ -75,13 +79,25 @@ def index():
     return template( 'bus' )
 
 
+@route('/cache.manifest')
+def manifest():
+    
+    openfile = open('cache.manifest', 'r')
+
+    print 'Serving Cache Manifest'
+    
+    return openfile.read()
+
+
 @route('/static/:path#.+#')
 def server_static(path):
+    print 'Serving static: %s' % path
     return static_file(path, root='../public/')
 
 @route('/favicon.ico')
 def favicon():
     return ''
+
 
 
 debug(True)

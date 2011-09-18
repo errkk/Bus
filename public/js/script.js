@@ -25,6 +25,8 @@ $(document).ready(function() {
         
         base.doscrollything = true;
         
+        base.range = 0.003;
+        
         
         base.getBuses = function( stopID, callback )
         {
@@ -37,14 +39,49 @@ $(document).ready(function() {
         
         base.getBusStops = function( lat,lng,callback )
         {
-            var stopID = 1045,
-                url = "/stops/" + lat + '/' + lng;
+            var url = "/stops/" + lat + '/' + lng + '/' + base.range;
             
             $.getJSON( encodeURI(url), function( data ) {  
                 callback( data );
             }); 
         }
         
+        
+        
+        
+        base.busStopClick = function( id ) {
+                   
+            $.mobile.changePage( $("#two") );
+
+            $('#busstopname').html( base.markers[id].title );
+
+            base.$screen.html('<p>Loading</p>');
+            // change this to click events for the routes
+            base.getBuses( id, function( data ){
+
+                var count = data.length,
+                    items = [];
+
+                base.$screen.html('');
+
+                for( i = 0; i <= count; i++ ){
+
+                    var el = document.createElement( 'p' ),
+                        val = data[i];
+                    if( val ){
+                        el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
+
+                        base.$screen.append( $(el) );
+
+                        items[i] = $(el);
+                    }
+
+                }
+
+
+
+            } );
+        }
         
         /**
          * Initialise retailers map
@@ -55,6 +92,17 @@ $(document).ready(function() {
             // Only run if google api is loaded
             if( typeof(google) == "undefined" || typeof(google.maps.MapTypeId) == "undefined" )
                 return false;
+            
+            
+            base.mapdebug = true;
+            
+            if( base.mapdebug ){
+                
+                base.latbig = pos.coords.latitude + base.range;
+                base.lngbig = pos.coords.longitude + ( base.range * 1.4 );
+                base.latsm = pos.coords.latitude - base.range;
+                base.lngsm = pos.coords.longitude - ( base.range * 1.4 );
+            }
 
             // create a single info window object
             base.infoWindow = new google.maps.InfoWindow();
@@ -80,20 +128,35 @@ $(document).ready(function() {
                 
                 
                 base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
+                    
+                    // Loading Classes
                     $( '#map_canvas' ).removeClass('loading');
                     $('#relocate').removeClass('ui-btn-active loading');
+                    
                     // store busstops in object so addMarkers can use them
                     base.busStops = data;
 
                     // Create markers and attach them to the map
                     base.addMarkers();
 
-                    var len = base.busStops.length;
+                    
+                    var len = base.busStops.length,
+                        $stopList = $('#stop_list');
+                    
+                    $stopList.html('');
+                    
+                    // Loop busstops and add them to the list
                     for (var i = 0; i < len; i++) {
                         
-                         var $li = $( '<li><a href="na">' + base.busStops[i].name + '</a></li>' ).data( 'id',base.busStops[i].id );
-                        $('#stop_list').append( $li );
+                        var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                            .data( 'id',base.busStops[i].id )
+                            .data( 'role', 'list-divider' ).click( function(){
+                                base.busStopClick( $(this).data('id') );
+                            } );
+                        $stopList.append( $li );
                     }
+                    
+                    $stopList.listview('refresh');
                 });
                 
                 
@@ -112,6 +175,7 @@ $(document).ready(function() {
         }
         
         
+        
 
         /**
          * Loop through array of locations "mymarkers" returned by the store_locator class in the footer of the page
@@ -120,12 +184,12 @@ $(document).ready(function() {
         base.addMarkers = function()
         {
             try{
-                if( mapdebug ){
+                if( base.mapdebug ){
                     var paths = [
-                    new google.maps.LatLng(latbig, lngbig),
-                    new google.maps.LatLng(latbig, lngsm),
-                    new google.maps.LatLng(latsm, lngsm),
-                    new google.maps.LatLng(latsm, lngbig)
+                    new google.maps.LatLng(base.latbig, base.lngbig),
+                    new google.maps.LatLng(base.latbig, base.lngsm),
+                    new google.maps.LatLng(base.latsm, base.lngsm),
+                    new google.maps.LatLng(base.latsm, base.lngbig)
                     ];
 
                     var shape = new google.maps.Polygon({
@@ -137,15 +201,18 @@ $(document).ready(function() {
                     fillOpacity: 0.35
                     });
 
-                    shape.setMap(map);
+                    shape.setMap(base.map);
                 }
             }catch(e){}
             
             // get busstops from webservice
+            
+            
 
 
             var createMaker = function( map, myLatLng, id, title, i, letter )
             {
+                // Use letter to work out the offset for the icon sprite
                 var letterSwitch = function( letter ){
                         var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
                             
@@ -160,7 +227,7 @@ $(document).ready(function() {
                         }catch(err){ console.log(err); }
                     },
 
-
+                    // Make a marker image object
                     image = new google.maps.MarkerImage(
                         '/static/img/design/ico-stops.png',
                         new google.maps.Size( 21,26 ), // Size
@@ -180,43 +247,11 @@ $(document).ready(function() {
                 // Store marker objects in an array to manipulate them later
                 base.markers[id] = marker;
                 
-                google.maps.event.addListener(marker, 'click', function() {
+                google.maps.event.addListener( marker, 'click', function(){
+                    // Call this inside the clousure to access ID
+                    base.busStopClick( id, title );
                     
-                    $.mobile.changePage($("#two"));
-                    
-                    $('#busstopname').html( title );
-                    
-//                    base.infoWindow.setContent( title );
-//                    base.infoWindow.open( base.map,this );
-                    
-                    
-                    base.$screen.html('<p>Loading</p>');
-                    // change this to click events for the routes
-                    base.getBuses( id, function( data ){
-
-                        var count = data.length,
-                            items = [];
-                            
-                        base.$screen.html('');
-                       
-                        for( i = 0; i <= count; i++ ){
-                            
-                            var el = document.createElement( 'p' ),
-                                val = data[i];
-                            if( val ){
-                                el.innerHTML = '<span class="route">' + ( i + 1 ) + ' ' + val.route + '</span>  <span class="destination">' + val.destination + '</span> <span class="countdown">' + val.wait + '</span>';
-                            
-                                base.$screen.append( $(el) );
-                            
-                                items[i] = $(el);
-                            }
-                            
-                        }
-                        
-                        
-                        
-                    } );
-                });
+                } );
 
             }// /createMarker ----------------------------------------------------------
 
@@ -245,6 +280,9 @@ $(document).ready(function() {
         base.init = function(){
             base.options = $.extend({},$.bus.defaultOptions, options);
             
+            
+            
+            
             var get_position = function(){
                 // TODO: show a loading gif
                 $( '#map_canvas' ).addClass('loading');
@@ -270,7 +308,13 @@ $(document).ready(function() {
                     get_position();
                 });
                 
-                $('#two').live( 'swiperight', function(){
+                
+                $( '#slider' ).live( 'change', function(event){
+                    
+                    base.range = ( $(this).val() / 1000 );
+                });
+                
+                $('#two, #list').live( 'swiperight', function(){
                     $.mobile.changePage('/',{reverse:true});
                 } );
   

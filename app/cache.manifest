@@ -1,0 +1,22 @@
+CACHE MANIFEST
+# rev 10
+
+NETWORK:
+/bus/*
+/stops/*
+
+CACHE:
+
+/static/css/style.css
+/static/js/script.js
+
+/static/img/design/ico-stops.png
+/static/img/design/ico-direction.png
+/static/img/design/apple-touch-icon.png
+
+http://fonts.googleapis.com/*
+http://code.jquery.com/mobile/1.0b3/*
+http://maps.google.com/maps/api/*
+http://code.jquery.com/*
+
+
