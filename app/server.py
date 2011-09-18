@@ -81,12 +81,8 @@ def index():
 
 @route('/cache.manifest')
 def manifest():
-    
-    openfile = open('cache.manifest', 'r')
-
     print 'Serving Cache Manifest'
-    
-    return openfile.read()
+    return static_file('cache.manifest', root='', mimetype='text/cache-manifest')
 
 
 @route('/static/:path#.+#')

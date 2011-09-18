@@ -94,7 +94,7 @@ $(document).ready(function() {
                 return false;
             
             
-            base.mapdebug = true;
+            base.mapdebug = false;
             
             if( base.mapdebug ){
                 
