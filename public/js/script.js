@@ -43,7 +43,11 @@ $(document).ready(function() {
             
             $.getJSON( encodeURI(url), function( data ) {  
                 callback( data );
+            }).error(function(){
+                callback(false);
             }); 
+            
+            
         }
         
         
@@ -133,30 +137,35 @@ $(document).ready(function() {
                     $( '#map_canvas' ).removeClass('loading');
                     $('#relocate').removeClass('ui-btn-active loading');
                     
-                    // store busstops in object so addMarkers can use them
-                    base.busStops = data;
+                    if( data ){
 
-                    // Create markers and attach them to the map
-                    base.addMarkers();
+                        // store busstops in object so addMarkers can use them
+                        base.busStops = data;
 
-                    
-                    var len = base.busStops.length,
-                        $stopList = $('#stop_list');
-                    
-                    $stopList.html('');
-                    
-                    // Loop busstops and add them to the list
-                    for (var i = 0; i < len; i++) {
-                        
-                        var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
-                            .data( 'id',base.busStops[i].id )
-                            .data( 'role', 'list-divider' ).click( function(){
-                                base.busStopClick( $(this).data('id') );
-                            } );
-                        $stopList.append( $li );
+                        // Create markers and attach them to the map
+                        base.addMarkers();
+
+
+                        var len = base.busStops.length,
+                            $stopList = $('#stop_list');
+
+                        $stopList.html('');
+
+                        // Loop busstops and add them to the list
+                        for (var i = 0; i < len; i++) {
+
+                            var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                                .data( 'id',base.busStops[i].id )
+                                .data( 'role', 'list-divider' ).click( function(){
+                                    base.busStopClick( $(this).data('id') );
+                                } );
+                            $stopList.append( $li );
+                        }
+
+                        $stopList.listview('refresh');
+                    }else{
+                        alert('Could not find any bus stops :-(');
                     }
-                    
-                    $stopList.listview('refresh');
                 });
                 
                 
@@ -224,7 +233,7 @@ $(document).ready(function() {
                             }else{
                                 return 0;
                             }
-                        }catch(err){ console.log(err); }
+                        }catch(err){console.log(err);}
                     },
 
                     // Make a marker image object
