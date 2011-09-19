@@ -1,4 +1,4 @@
-__author__ = 'eric'
+
 
 import math
 
@@ -52,4 +52,3 @@ def utmToLatLng(zone, easting, northing, northernHemisphere=True):
     longitude = ((zone > 0) and (6 * zone - 183.0) or 3.0) - _a3
 
     return (latitude, longitude)
-  
