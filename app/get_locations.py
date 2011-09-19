@@ -1,17 +1,12 @@
-__author__ = 'eric'
+#!/usr/bin/python
 
-import urllib, csv, math
-from convert import utmToLatLng
+import csv
+from lib.db import Database
 
-
-def utmify():
-
-
-
-    url = 'http://www.tfl.gov.uk/tfl/businessandpartners/syndication/feed.aspx?email=errkkgeorge@gmail.com&feedId=10'
+def import_stops():
 
     try:
-        file = urllib.urlopen( url )
+        file = open('../utils/converted.csv', 'U')
     except:
         print 'cant get file'
 
@@ -22,62 +17,39 @@ def utmify():
         exit()
 
 
-    #db = Database()
+    db = Database()
 
-    busstops = []
-
-    if len(busstops) < 1:
-        print 'nope'
     count = 0
     for row in stops:
 
         count = count + 1
-        if count > 10:
-            break
+
+        #stop after 10
+#        if count > 10:
+#            break
+
         thestop = row[0].split(',')
 
+        stopcode = thestop[1]
+        name = thestop[2]
+        heading = thestop[3]
+        smsCode = thestop[4]
+        lat = thestop[5]
+        lng = thestop[6]
 
-
-        name = thestop[1]
-
-        id = thestop[0]
-
-        smsCode = thestop[5]
-
-        northing = thestop[3]
-        easting = thestop[2]
-
-        stopArea = thestop[6]
-
-
-        print name
-
-        print easting
-        print northing
+        data = { 'id':stopcode, 'name':name, 'lat':lat, 'lng':lng, 'heading':heading, 'smsCode':smsCode }
 
         try:
-            print utmToLatLng(39, int(easting), int(northing) )
+            db.addRow(data)
+            print 'Saving %s' % name
+            count = count + 1
         except:
-            print 'fail'
-            
-        #data = {'name':name,'id':id, 'northing':northing, 'easting':easting }
-        #busstops.append( data )
+            print 'Fail for %s' % name
 
-        #db.addRow(data)
+    print 'Saved %d records to busstops' % count
 
+import_stops()
 
 
-    print busstops
-
-def findZone():
-
-    number = 0
-
-    while number < 1000:
-        print number
-        print utmToLatLng(number, int(517907), int(182704) )
-        number = number + 1
-
-utmify()
 
         
