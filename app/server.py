@@ -1,6 +1,6 @@
 import simplejson, urllib, json,csv
 from bottle import route,run,static_file,template,debug
-
+from lib.db import Database
 
 class BusStuff:
     dist = 0.003
@@ -16,27 +16,33 @@ class BusStuff:
         neLat = float(lat) + self.dist
         neLng = float(lng) + ( self.dist * 1.4 )
 
+        db = Database()
 
-        url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
-            % ( swLat, swLng, neLat, neLng )
+        return db.findStops( swLat,swLng,neLat,neLng )
 
-        result = simplejson.load(urllib.urlopen(url))
+        
 
-        print 'Found %d busstops' % len(result['markers'])
-
-        stops = []
-
-        for item in result['markers']:
-
-            stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
-
-        return stops
+#
+#        url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
+#            % ( swLat, swLng, neLat, neLng )
+#
+#        result = simplejson.load(urllib.urlopen(url))
+#
+#        print 'Found %d busstops' % len(result['markers'])
+#
+#        stops = []
+#
+#        for item in result['markers']:
+#
+#            stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
+#
+#        return stops
 
 
     def getBuses(self,busStop):
-    #    busstop = 51502
+
         url = 'http://countdown.tfl.gov.uk/stopBoard/%s?_dc=1315936072189' % busStop
-        print url
+
         jsonfile = urllib.urlopen( url )
 
         result = simplejson.load( jsonfile )
@@ -48,12 +54,10 @@ class BusStuff:
         buses = []
 
         for item in arrivals:
-
-
             found = True
             print ( '%s till next %s to %s' % ( item['estimatedWait'],item['routeName'],item['destination'] ) )
-
             buses.append( {'route':item['routeName'],'wait':item['estimatedWait'],'destination':item['destination']} )
+
 
         return buses
 
@@ -61,6 +65,7 @@ class BusStuff:
 
 
 BusStuff = BusStuff()
+
 
 @route('/bus/:busStop')
 def bus(busStop = 51502):
@@ -96,5 +101,5 @@ def favicon():
 
 
 
-#debug(True)
+debug(True)
 run( server='tornado',port=80 )

@@ -1,3 +1,4 @@
+import simplejson,json
 from pymongo import Connection
 
 class Database(object):
@@ -9,7 +10,7 @@ class Database(object):
     def __init__(self):
 
         # connect to database
-        self.con = Connection()
+        self.con = Connection('localhost', 27017)
         self.col = self.con.bus
 
     def addRow(self,data):
@@ -21,23 +22,32 @@ class Database(object):
 
     def findStops(self,swLat,swLng,neLat,neLng):
 
+        condition = {'lat':{'$gt': str(swLat), '$lt': str(neLat)},'lng':{'$lt': str(swLng), '$gt': str(neLng)}}
 
-#        print swLat,swLng,neLat,neLng
-#        51.4591 -0.1396 51.4651 -0.1312
-#        condition = {'lat':{'$gt': float(swLat), '$lt': float(neLat)},'lng':{'$gt': float(swLng), '$lt': float(neLng)}}
-        condition = {'direction':99}
-        
-#        , '$lt':neLat},'lng':{'$gt': swLng, '$lt':neLng
-
-
-#        cur = self.col.busstops.find( {'lng':{'$gt': swLat}} )
-
+        res = []
         try:
-            for i in self.col.busstops.find( {'direction':99} ):
-                print i
+            cur = self.col.busstops.find( condition ).skip(0).limit(30)
+            for d in cur:
+#
+#                item = []
+#                for value in d:
+#                    if value != '_id':
+#                        item.append( d[value] )
+#                res.append( d )
+
+                
+                print d['_id']
+
+            
         except Database:
-            print 'Error'
+            print 'DB error'
+            return False
+
+        if len(res) > 0:
+            print res
+            return res
+        else:
+            return False
 
 
         
-#        print self.col.busstops.find( condition ).sort("id").count()
