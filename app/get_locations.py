@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
-import csv
+import csv,simplejson,urllib
 from lib.db import Database
+from lib.decorators import print_timing
 
 def import_stops():
 
@@ -24,10 +25,6 @@ def import_stops():
 
         count = count + 1
 
-        #stop after 10
-#        if count > 10:
-#            break
-
         thestop = row[0].split(',')
 
         stopcode = thestop[1]
@@ -48,7 +45,50 @@ def import_stops():
 
     print 'Saved %d records to busstops' % count
 
-import_stops()
+
+
+@print_timing
+def import_stops_ws():
+    """
+    Pull All stops form WS
+    """
+
+    db = Database()
+    try:
+        url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189'\
+        % ( 50,0.3,52,-0.3 )
+
+        result = simplejson.load(urllib.urlopen(url))
+
+        print 'Found %d busstops from webservice' % len(result['markers'])
+
+    except:
+        print 'Error getting JSON'
+
+    stops = []
+    count = 0
+
+    for item in result['markers']:
+
+        count = count + 1
+
+
+        data = { 'id':item['id'], 'name':item['name'],'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':str(item['lat']), 'lng':str(item['lng']) }
+
+
+        try:
+            db.addRow(data)
+            print 'Saving %s' % item['name']
+            count = count + 1
+        except:
+            print 'Error saving for %s' % item['name']
+
+    print 'Saved %d records to busstops' % count
+
+
+
+
+import_stops_ws()
 
 
 

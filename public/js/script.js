@@ -136,59 +136,68 @@ $(document).ready(function() {
             base.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
 
+            
+            
             var centre = new google.maps.LatLng( pos.coords.latitude, pos.coords.longitude );
             base.map.setCenter( centre );
             
             
-            base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
-                $('#relocate').removeClass('ui-btn-active loading');
-
-                if( data && data.length > 0 ){
-
-                    // store busstops in object so addMarkers can use them
-                    base.busStops = data;
-
-                    
-
-
-                    var len = base.busStops.length,
-                        $stopList = $('#stop_list');
-
-                    $stopList.html('');
-
-                    // Loop busstops and add them to the list
-                    for (var i = 0; i < len; i++) {
-console.log( base.busStops[i].code );
-                        var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
-                            .data( 'id',base.busStops[i].code )
-                            .data( 'role', 'list-divider' ).click( function(){
-                                base.busStopClick( $(this).data('id') );
-                            } );
-                        $stopList.append( $li );
-                    }
-                    try{
-                        $stopList.listview('refresh');
-                    }catch(e){
-
-                    }
-                }else{
-                    $('#msg').find('.message').html('Could not find any bus stops');
-                    $.mobile.loadPage( $('#msg'), {transition:'pop'} );
-                }
-            });
+            
 
             // add markers when the tiles are loaded
             
             google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){
                 
-                // Create markers and attach them to the map
-                if( base.busStops ){
-                    base.addMarkers();
-                }
+                
+                base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
+                    $('#relocate').removeClass('ui-btn-active loading');
+
+                    if( data && data.length > 0 ){
+
+                        // store busstops in object so addMarkers can use them
+                        base.busStops = data;
+
+                        // Create markers and attach them to the map
+                
+                        base.addMarkers();
                 
                 
-                // Loading Classes
-                $( '#map_canvas' ).removeClass('loading');
+                
+                        // Loading Classes
+                        $( '#map_canvas' ).removeClass('loading');
+
+
+                        var len = base.busStops.length,
+                        $stopList = $('#stop_list');
+
+                        $stopList.html('');
+
+                        // Loop busstops and add them to the list
+                        for (var i = 0; i < len; i++) {
+                            
+                            console.log( base.busStops[i].name );
+
+                            var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                            .data( 'id',base.busStops[i].id )
+                            .data( 'role', 'list-divider' ).click( function(){
+                                base.busStopClick( $(this).data('id') );
+                            } );
+                            $stopList.append( $li );
+                        }
+                        try{
+                            $stopList.listview('refresh');
+                        }catch(e){
+
+                        }
+                    }else{
+                        $('#msg').find('.message').html('Could not find any bus stops');
+                        $.mobile.loadPage( $('#msg'), {
+                            transition:'pop'
+                        } );
+                    }
+                });
+                
+                
                 
                 
                 

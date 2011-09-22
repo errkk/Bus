@@ -1,15 +1,8 @@
-import simplejson, urllib, json,time
+import simplejson, urllib, json
 from bottle import route,run,static_file,template,debug
 from lib.db import Database
+from lib.decorators import print_timing
 
-def print_timing(func):
-    def wrapper(*arg):
-        t1 = time.time()
-        res = func(*arg)
-        t2 = time.time()
-        print '%s took %0.3f ms' % (func.func_name, (t2-t1)*1000.0)
-        return res
-    return wrapper
 
 class BusStuff:
     dist = 0.003
@@ -29,6 +22,9 @@ class BusStuff:
 
         return swLat,swLng,neLat,neLng
 
+
+
+
     @print_timing
     def getStops(self,lat,lng, dist):
 
@@ -39,6 +35,9 @@ class BusStuff:
         res = db.findStops( coords[0],coords[1],coords[2],coords[3] )
 
         return res
+
+
+
 
     @print_timing
     def getStopsWs(self,lat,lng, dist):
@@ -59,6 +58,10 @@ class BusStuff:
             stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
 
         return stops
+
+
+
+    
 
     @print_timing
     def getBuses(self,busStop):
