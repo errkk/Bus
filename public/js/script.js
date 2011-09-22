@@ -138,53 +138,60 @@ $(document).ready(function() {
 
             var centre = new google.maps.LatLng( pos.coords.latitude, pos.coords.longitude );
             base.map.setCenter( centre );
+            
+            
+            base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
+                $('#relocate').removeClass('ui-btn-active loading');
+
+                if( data && data.length > 0 ){
+
+                    // store busstops in object so addMarkers can use them
+                    base.busStops = data;
+
+                    
+
+
+                    var len = base.busStops.length,
+                        $stopList = $('#stop_list');
+
+                    $stopList.html('');
+
+                    // Loop busstops and add them to the list
+                    for (var i = 0; i < len; i++) {
+console.log( base.busStops[i].code );
+                        var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                            .data( 'id',base.busStops[i].code )
+                            .data( 'role', 'list-divider' ).click( function(){
+                                base.busStopClick( $(this).data('id') );
+                            } );
+                        $stopList.append( $li );
+                    }
+                    try{
+                        $stopList.listview('refresh');
+                    }catch(e){
+
+                    }
+                }else{
+                    $('#msg').find('.message').html('Could not find any bus stops');
+                    $.mobile.loadPage( $('#msg'), {transition:'pop'} );
+                }
+            });
 
             // add markers when the tiles are loaded
             
             google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){
                 
+                // Create markers and attach them to the map
+                if( base.busStops ){
+                    base.addMarkers();
+                }
                 
                 
-                base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
-                    
-                    // Loading Classes
-                    $( '#map_canvas' ).removeClass('loading');
-                    $('#relocate').removeClass('ui-btn-active loading');
-                    
-                    if( data && data.length > 0 ){
-
-                        // store busstops in object so addMarkers can use them
-                        base.busStops = data;
-
-                        // Create markers and attach them to the map
-                        base.addMarkers();
-
-
-                        var len = base.busStops.length,
-                            $stopList = $('#stop_list');
-
-                        $stopList.html('');
-
-                        // Loop busstops and add them to the list
-                        for (var i = 0; i < len; i++) {
-
-                            var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
-                                .data( 'id',base.busStops[i].id )
-                                .data( 'role', 'list-divider' ).click( function(){
-                                    base.busStopClick( $(this).data('id') );
-                                } );
-                            $stopList.append( $li );
-                        }
-                        try{
-                        $stopList.listview('refresh');
-                        }catch(e){
-                            
-                        }
-                    }else{
-                        $('#msg').find('.message').html('Could not find any bus stops');
-                        $.mobile.loadPage( $('#msg'), {transition:'pop'} );
-                    }
-                });
+                // Loading Classes
+                $( '#map_canvas' ).removeClass('loading');
+                
+                
+                
                 
                 
             } );
@@ -241,7 +248,9 @@ $(document).ready(function() {
                             }else{
                                 return 0;
                             }
-                        }catch(err){console.log(err);}
+                        }catch(err){
+                            
+                        }
                     },
 
                     // Make a marker image object
@@ -310,7 +319,7 @@ $(document).ready(function() {
                 var $li = $( '<li><a>' + base.myBuses[i].name + ' <span class="letter">' + base.myBuses[i].letter + '</span> <span class="direction ' + base.myBuses[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
                 .data( 'id',base.myBuses[i].id )
                 .data( 'role', 'list-divider' ).click( function(){
-                    base.busStopClick( $(this).data('id') );
+                    base.busStopClick( $(this).data('code') );
                 } );
                 $stopList.append( $li );
             }
@@ -324,7 +333,6 @@ $(document).ready(function() {
         
         
         base.init = function(){
-            base.options = $.extend({},$.bus.defaultOptions, options);
             
             // Find save stops
             var myBuses = JSON.parse( localStorage.getItem( 'mybuses' ) );
@@ -392,9 +400,6 @@ $(document).ready(function() {
         base.init();
     };
     
-    $.bus.defaultOptions = {
-        busstop: "lala"
-    };
     
     $.fn.bus = function(options){
         return this.each(function(){

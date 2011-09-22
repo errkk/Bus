@@ -1,14 +1,25 @@
-import simplejson, urllib, json,csv
+import simplejson, urllib, json,time
 from bottle import route,run,static_file,template,debug
 from lib.db import Database
+
+def print_timing(func):
+    def wrapper(*arg):
+        t1 = time.time()
+        res = func(*arg)
+        t2 = time.time()
+        print '%s took %0.3f ms' % (func.func_name, (t2-t1)*1000.0)
+        return res
+    return wrapper
 
 class BusStuff:
     dist = 0.003
 
-    def getStops(self,lat,lng, dist):
+
+    def _coords(self,lat,lng,dist):
 
         if dist:
             self.dist = float(dist)
+
         print 'Searching near %s - %s' % ( lat,lng )
 
         swLat = float(lat) - self.dist
@@ -16,50 +27,67 @@ class BusStuff:
         neLat = float(lat) + self.dist
         neLng = float(lng) + ( self.dist * 1.4 )
 
+        return swLat,swLng,neLat,neLng
+
+    @print_timing
+    def getStops(self,lat,lng, dist):
+
+        coords = self._coords(lat,lng,dist)
+
         db = Database()
 
-        return db.findStops( swLat,swLng,neLat,neLng )
+        res = db.findStops( coords[0],coords[1],coords[2],coords[3] )
 
-        
+        return res
 
-#
-#        url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
-#            % ( swLat, swLng, neLat, neLng )
-#
-#        result = simplejson.load(urllib.urlopen(url))
-#
-#        print 'Found %d busstops' % len(result['markers'])
-#
-#        stops = []
-#
-#        for item in result['markers']:
-#
-#            stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
-#
-#        return stops
+    @print_timing
+    def getStopsWs(self,lat,lng, dist):
 
+        coords = self._coords(lat,lng,dist)
 
+        url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
+            % ( coords[0],coords[1],coords[2],coords[3] )
+
+        result = simplejson.load(urllib.urlopen(url))
+
+        print 'Found %d busstops from webservice' % len(result['markers'])
+
+        stops = []
+
+        for item in result['markers']:
+
+            stops.append( { 'id':item['id'], 'name':item['name'], 'direction':item['direction'], 'letter':item['stopIndicator'], 'lat':item['lat'], 'lng':item['lng'] } )
+
+        return stops
+
+    @print_timing
     def getBuses(self,busStop):
 
-        url = 'http://countdown.tfl.gov.uk/stopBoard/%s?_dc=1315936072189' % busStop
+        url = 'http://countdown.tfl.gov.uk/stopBoard/%s?_dc=1316722451243' % busStop
+
+        print url
 
         jsonfile = urllib.urlopen( url )
 
         result = simplejson.load( jsonfile )
 
-        arrivals = result['arrivals']
+        try:
+            arrivals = result['arrivals']
 
-        found = False
+            buses = []
 
-        buses = []
+            for item in arrivals:
 
-        for item in arrivals:
-            found = True
-            print ( '%s till next %s to %s' % ( item['estimatedWait'],item['routeName'],item['destination'] ) )
-            buses.append( {'route':item['routeName'],'wait':item['estimatedWait'],'destination':item['destination']} )
+                print ( '%s till next %s to %s' % ( item['estimatedWait'],item['routeName'],item['destination'] ) )
+                buses.append( {'route':item['routeName'],'wait':item['estimatedWait'],'destination':item['destination']} )
+        except:
+            print 'Error finding busstop: %s' % busStop
+            return false
 
-
-        return buses
+        if( len(buses) > 0 ):
+            return buses
+        else:
+            return false
 
 
 
@@ -75,8 +103,8 @@ def bus(busStop = 51502):
 
 @route('/stops/:lat/:lng/:dist')
 def stops( lat=51.4612,lng=-0.1402,dist=0.003 ):
-    
-    return json.dumps( BusStuff.getStops(lat,lng,dist) )
+    stops = BusStuff.getStops(lat,lng,dist)
+    return json.dumps( stops )
 
 
 @route('/')

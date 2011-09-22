@@ -1,11 +1,11 @@
 CACHE MANIFEST
-# rev 30 014932233322333233333354309
+# rev 30 014932233322333233354309
 
 
 CACHE:
 /
 /static/css/style.css
-/static/js/script.js
+#/static/js/script.js
 /static/img/design/ico-stops.png
 /static/img/design/ico-direction.png
 /static/img/design/apple-touch-icon.png

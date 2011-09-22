@@ -26,17 +26,10 @@ class Database(object):
 
         res = []
         try:
-            cur = self.col.busstops.find( condition ).skip(0).limit(30)
+            cur = self.col.busstops.find( condition ).skip(0).limit(300)
             for d in cur:
-#
-#                item = []
-#                for value in d:
-#                    if value != '_id':
-#                        item.append( d[value] )
-#                res.append( d )
 
-                
-                print d['_id']
+                res.append( { 'id':d['id'],'lat':d['lat'],'lng':d['lng'],'name':d['name'],'code':d['smsCode'],'heading':d['heading'],'letter':'A' } )
 
             
         except Database:
@@ -44,7 +37,7 @@ class Database(object):
             return False
 
         if len(res) > 0:
-            print res
+            print 'Found %d stops' % len(res)
             return res
         else:
             return False
