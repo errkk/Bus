@@ -44,6 +44,7 @@ $(document).ready(function() {
             var url = "/stops/" + lat + '/' + lng + '/' + base.range;
             
             $.getJSON( url, function( data ) {  
+                
                 callback( data );
             }).error(function(){
                 callback(false);
@@ -110,9 +111,10 @@ $(document).ready(function() {
             // Only run if google api is loaded
             if( typeof(google) == "undefined" || typeof(google.maps.MapTypeId) == "undefined" )
                 return false;
+             
+            base.mapdebug = true;
             
-            
-            base.mapdebug = false;
+            base.pos = pos;
             
             if( base.mapdebug ){
                 
@@ -121,9 +123,6 @@ $(document).ready(function() {
                 base.latsm = pos.coords.latitude - base.range;
                 base.lngsm = pos.coords.longitude - ( base.range * 1.4 );
             }
-
-            // create a single info window object
-            base.infoWindow = new google.maps.InfoWindow();
 
             //Google maps defaults
             var myOptions = {
@@ -135,79 +134,71 @@ $(document).ready(function() {
             // Create map object in map_canvas element
             base.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-
+            google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){} );
             
+            base.centre_map();
             
-            var centre = new google.maps.LatLng( pos.coords.latitude, pos.coords.longitude );
+            base.update_markers();
+        }
+        
+        
+        base.centre_map = function()
+        {
+            var centre = new google.maps.LatLng( base.pos.coords.latitude, base.pos.coords.longitude );
+            if( base.map ){
             base.map.setCenter( centre );
-            
-            
-            
-
-            // add markers when the tiles are loaded
-            
-            google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){
+            }else{
+                base.retailer_map();
+                base.map.setCenter( centre );
+            }
+        }
+        
+        base.update_markers = function()
+        {
+            base.getBusStops( base.pos.coords.latitude, base.pos.coords.longitude, function( data ){
                 
-                
-                base.getBusStops( pos.coords.latitude, pos.coords.longitude, function( data ){
-                    $('#relocate').removeClass('ui-btn-active loading');
+                if( data && data.length > 0 ){
+                    // store busstops in object so addMarkers can use them
+                    base.busStops = data;
 
-                    if( data && data.length > 0 ){
+                    // Create markers and attach them to the map
+                    base.addMarkers();
 
-                        // store busstops in object so addMarkers can use them
-                        base.busStops = data;
+                    // Loading Classes
+                    $( '#map_canvas' ).removeClass('loading');
 
-                        // Create markers and attach them to the map
-                
-                        base.addMarkers();
-                
-                
-                
-                        // Loading Classes
-                        $( '#map_canvas' ).removeClass('loading');
-
-
-                        var len = base.busStops.length,
+                    var len = base.busStops.length,
                         $stopList = $('#stop_list');
 
-                        $stopList.html('');
+                    $stopList.html('');
 
-                        // Loop busstops and add them to the list
-                        for (var i = 0; i < len; i++) {
-                            
-                            console.log( base.busStops[i].name );
+                    // Loop busstops and add them to the list
+                    for (var i = 0; i < len; i++) {
 
-                            var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
+                        var $li = $( '<li><a>' + base.busStops[i].name + ' <span class="letter">' + base.busStops[i].letter + '</span> <span class="direction ' + base.busStops[i].direction + '"><span class="ico-direction"> </span></span></a></li>' )
                             .data( 'id',base.busStops[i].id )
                             .data( 'role', 'list-divider' ).click( function(){
                                 base.busStopClick( $(this).data('id') );
                             } );
-                            $stopList.append( $li );
-                        }
-                        try{
-                            $stopList.listview('refresh');
-                        }catch(e){
-
-                        }
-                    }else{
-                        $('#msg').find('.message').html('Could not find any bus stops');
-                        $.mobile.loadPage( $('#msg'), {
-                            transition:'pop'
-                        } );
+                        $stopList.append( $li );
                     }
-                });
+                    try{
+                        $stopList.listview('refresh');
+                    }catch(e){
+
+                    }
                 
                 
                 
-                
-                
-                
-                
-            } );
-            
+                }else{
+                    $('#msg').find('.message').html('Could not find any bus stops');
+                    $.mobile.loadPage( $('#msg'), {
+                        transition:'pop'
+                    } );
+                }
+            });
         }
-        
-        
+
         
 
         /**
@@ -352,10 +343,13 @@ $(document).ready(function() {
             }
             
             
+            
+            
             var get_position = function(){
                 // TODO: show a loading gif
                 $( '#map_canvas' ).addClass('loading');
                 // 
+                
                 // Get location and run retailermap as callback
                 navigator.geolocation.getCurrentPosition(
                     base.retailer_map, // call back function
@@ -371,7 +365,14 @@ $(document).ready(function() {
             
                 $( '#relocate' ).live( 'vclick', function(event){
                     $(this).addClass('ui-btn-active loading');
+                    
                     get_position();
+                });
+                
+                $( '#update' ).live( 'vclick', function(event){
+                    $(this).addClass('ui-btn-active loading');
+                    
+                    base.update_markers();
                 });
                 
                 
