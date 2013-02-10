@@ -5,8 +5,8 @@
 vagrant:
   '*':
     # Recomended States
-    #- poke.bash
-    #- poke.packages
+    - poke.bash
+    - poke.packages
     - nginx
     # States for this instance, for exanple: python
     - python

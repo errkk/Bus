@@ -32,7 +32,7 @@ class BusStuff:
         coords = self._coords(lat, lng, dist)
 
         url = 'http://countdown.tfl.gov.uk/markers/swLat/%s/swLng/%s/neLat/%s/neLng/%s/?_dc=1315936072189' \
-            % *coords
+            % coords
 
         result = simplejson.load(urllib.urlopen(url))
         print 'Found %d busstops from webservice' % len(result['markers'])

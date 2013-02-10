@@ -3,8 +3,8 @@
 
 # Project
 user: vagrant
-project_client: 'wsp'
-project_name: 'planner'
+project_client: 'me'
+project_name: 'busapp'
 
 # Paths
 root_dir: /home/vagrant
