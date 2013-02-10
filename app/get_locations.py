@@ -86,10 +86,4 @@ def import_stops_ws():
     print 'Saved %d records to busstops' % count
 
 
-
-
 import_stops_ws()
-
-
-
-        
