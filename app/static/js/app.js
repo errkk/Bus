@@ -14,7 +14,7 @@ define([
             init: function() {
                 // Kick of instance of homeview which instanciates child views
                 var homeView = new HomeView({
-                    $el: $('#homeView')
+                    $el: $('#view-home')
                 });
             }
         };
