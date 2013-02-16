@@ -1,0 +1,31 @@
+/**
+ * Main Styles
+ */
+body {
+  background: #ccc;
+}
+/* ====================
+    Map View
+   ==================== */
+#view-home {
+  background: blue;
+}
+#view-home #mapCanvas {
+  background: green;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+/* ====================
+    Panels
+   ==================== */
+.panel {
+  min-height: 500px;
+}
+.panel.inview {
+  background: green;
+}

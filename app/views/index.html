@@ -1,0 +1,58 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+        <title>Bus Countdown</title>
+
+        <link rel="apple-touch-startup-image" href="/static/img/design/home.png" />
+        <link rel="stylesheet" href="/static/css/ios.css">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <link rel="apple-touch-icon" href="/static/img/design/apple-touch-icon.png"/>
+
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+        <script data-main="/static/js/app" src="/static/js/lib/require/require.js"></script>
+        <script src="/static/js/config.js"></script>
+    </head>
+
+    <body>
+        <div id="appLoader"></div>
+        <div class="view" id="view-home">
+            <header>
+                <a href="#/about" class="header-button header-button-left"><button>About</button></a>
+                <h1 style="margin: 0 65px;">Bus Stops</h1>
+                <a class="header-button header-button-icon header-button-right" id="view-home-refresh"><button><i class="icon-refresh">Refresh</i></button></a>
+            </header>
+            <div id="mapCanvas">
+                Map
+            <div>
+        </div>
+
+        <div class="view hidden" id="view-about">
+            <header>
+                <a href="#/about" class="header-button header-button-left"><button>About</button></a>
+                <h1 style="margin: 0 65px;">Bus Stops</h1>
+                <a class="header-button header-button-icon header-button-right" id="view-home-refresh"><button><i class="icon-refresh">Refresh</i></button></a>
+            </header>
+            <div class="scroll striped">
+                <section>
+                    <div class="grouped-tableview cf">
+                    <span id="y-icon"></span>
+                        <p id="app-desc"><strong>HackerWeb</strong><br>A simply readable Hacker News web app.</p>
+                    </div>
+                    <ul class="grouped-tableview grouped-tableview-links">
+                        <li><a href="http://hackerwebapp.com/" target="_blank" class="disclosure">HackerWeb homepage</a></li>
+                    </ul>
+                    <p class="foot-label"></p>
+                </section>
+            </div>
+        </div>
+    </body>
+</html>
+
+

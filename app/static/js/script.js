@@ -1,67 +1,57 @@
 $(document).ready(function() {
-
     $('#one').bus();
-  
 });
-
-
-
-
 
 (function($){
     $.bus = function(el, options){
         var base = this;
-        
+
         base.$el = $(el);
         base.el = el;
-        
+
         base.$buses = $(el).find( '#buses' );
         base.$screen = $( '#screen' );
-        
+
         base.$el.data("bus", base);
-        
-        
+
         base.markers = [];
-        
+
         base.doscrollything = true;
-        
+
         base.range = 0.003;
-        
-        
+
+
         base.getBuses = function( stopID, callback )
         {
             var url = "/bus/" + stopID;
-            
-            $.getJSON(url, function( data ) {  
+
+            $.getJSON(url, function( data ) {
                 callback( data );
             }).error(function(){
                 callback(false);
-            }); 
+            });
         }
-        
+
         base.getBusStops = function( lat,lng,callback )
         {
-            var url = "/stops/" + lat + '/' + lng + '/' + base.range;
-            
-            $.getJSON( url, function( data ) {  
-                
+            var url = '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopCode1,StopPointName,Bearing,StopPointIndicator,StopPointType,Latitude,Longitude';
+            $.getJSON(url, function(data) {
+                console.log(data);
                 callback( data );
             }).error(function(){
                 callback(false);
-            }); 
-            
-            
+            });
         }
-        
-        
-        
-        
+
+
+
+
         base.busStopClick = function( id ) {
-                   
+
             $.mobile.changePage( $("#two") );
 
             $('#busstopname').html( base.markers[id].title );
-            
+
             // save obj for saving in local storage
             base.currentStop = base.markers[id];
 
@@ -89,19 +79,19 @@ $(document).ready(function() {
                         }
 
                     }
-                
+
                 }else{
-                    
+
                     $('#msg').find('.message').html('No buses found from here');
                         $.mobile.loadPage( $('#msg'), {transition:'pop'} );
                 }
-            
+
 
 
 
             } );
         }
-        
+
         /**
          * Initialise retailers map
          *
@@ -111,13 +101,13 @@ $(document).ready(function() {
             // Only run if google api is loaded
             if( typeof(google) == "undefined" || typeof(google.maps.MapTypeId) == "undefined" )
                 return false;
-             
+
             base.mapdebug = true;
-            
+
             base.pos = pos;
-            
+
             if( base.mapdebug ){
-                
+
                 base.latbig = pos.coords.latitude + base.range;
                 base.lngbig = pos.coords.longitude + ( base.range * 1.4 );
                 base.latsm = pos.coords.latitude - base.range;
@@ -135,13 +125,13 @@ $(document).ready(function() {
             base.map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
             google.maps.event.addListenerOnce( base.map, 'tilesloaded', function(){} );
-            
+
             base.centre_map();
-            
+
             base.update_markers();
         }
-        
-        
+
+
         base.centre_map = function()
         {
             var centre = new google.maps.LatLng( base.pos.coords.latitude, base.pos.coords.longitude );
@@ -152,11 +142,11 @@ $(document).ready(function() {
                 base.map.setCenter( centre );
             }
         }
-        
+
         base.update_markers = function()
         {
             base.getBusStops( base.pos.coords.latitude, base.pos.coords.longitude, function( data ){
-                
+
                 if( data && data.length > 0 ){
                     // store busstops in object so addMarkers can use them
                     base.busStops = data;
@@ -187,9 +177,9 @@ $(document).ready(function() {
                     }catch(e){
 
                     }
-                
-                
-                
+
+
+
                 }else{
                     $('#msg').find('.message').html('Could not find any bus stops');
                     $.mobile.loadPage( $('#msg'), {
@@ -199,7 +189,7 @@ $(document).ready(function() {
             });
         }
 
-        
+
 
         /**
          * Loop through array of locations "mymarkers" returned by the store_locator class in the footer of the page
@@ -228,10 +218,10 @@ $(document).ready(function() {
                     shape.setMap(base.map);
                 }
             }catch(e){}
-            
+
             // get busstops from webservice
-            
-            
+
+
 
 
             var createMaker = function( map, myLatLng, id, title, i, letter )
@@ -239,17 +229,17 @@ $(document).ready(function() {
                 // Use letter to work out the offset for the icon sprite
                 var letterSwitch = function( letter ){
                         var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-                            
+
                         try{
                             var number = letters.indexOf( letter );
-                            
+
                             if( number ){
                                 return ( number * 26 );
                             }else{
                                 return 0;
                             }
                         }catch(err){
-                            
+
                         }
                     },
 
@@ -269,21 +259,21 @@ $(document).ready(function() {
                         letter: letter,
                         icon: image
                     });
-                
+
                 // Store marker objects in an array to manipulate them later
                 base.markers[id] = marker;
-                
+
                 google.maps.event.addListener( marker, 'click', function(){
                     // Call this inside the clousure to access ID
                     base.busStopClick( id, title );
-                    
+
                 } );
 
             }// /createMarker ----------------------------------------------------------
 
             // Loop
             var len = base.busStops.length;
-            
+
             for (var i = 0; i < len; i++) {
                 stopLocation = base.busStops[i]; // curent item
 
@@ -300,13 +290,13 @@ $(document).ready(function() {
         }// /addMarkers ----------------------------------------------------------------
 
 
-        
+
         base.populatefavs = function()
         {
             if( !base.myBuses ){
                 return false;
             }
-            
+
             // Add saved items to list
             var len = base.myBuses.length,
             $stopList = $('#fav_stop_list');
@@ -329,27 +319,27 @@ $(document).ready(function() {
 
             }
         }
-        
-        
-        
+
+
+
         base.init = function(){
-            
+
             // Find save stops
             var myBuses = JSON.parse( localStorage.getItem( 'mybuses' ) );
-            
+
             if( myBuses ){
                 // stuff is saved so load it in
                 base.myBuses = myBuses;
             }
-            
-            
-            
-            
+
+
+
+
             var get_position = function(){
                 // TODO: show a loading gif
                 $( '#map_canvas' ).addClass('loading');
-                // 
-                
+                //
+
                 // Get location and run retailermap as callback
                 navigator.geolocation.getCurrentPosition(
                     base.retailer_map, // call back function
@@ -360,63 +350,63 @@ $(document).ready(function() {
                         'maximumAge':0
                     });
             }
-            
-            
-            
-                $( '#relocate' ).live( 'vclick', function(event){
+
+
+
+                $( '#relocate' ).on( 'vclick', function(event){
                     $(this).addClass('ui-btn-active loading');
-                    
+
                     get_position();
                 });
-                
-                $( '#update' ).live( 'vclick', function(event){
+
+                $( '#update' ).on( 'vclick', function(event){
                     $(this).addClass('ui-btn-active loading');
-                    
+
                     base.update_markers();
                 });
-                
-                
-                $( '#slider' ).live( 'change', function(event){
+
+
+                $( '#slider' ).on( 'change', function(event){
                     base.range = ( $(this).val() / 1000 );
                 });
-                
-                $('#two, #list').live( 'swiperight', function(){
+
+                $('#two, #list').on( 'swiperight', function(){
                     $.mobile.changePage('/',{reverse:true});
                 } );
-                
-                $('#btnSave').live( 'vclick', function(event){
-                    
+
+                $('#btnSave').on( 'vclick', function(event){
+
                     if( typeof( base.myBuses ) == 'array' ){
                         base.myBuses.push( base.currentStop );
                     }else{
                         base.myBuses = [];
                         base.myBuses.push( base.currentStop );
                     }
-                    
+
                     localStorage.setItem( 'mybuses', JSON.stringify(base.myBuses) );
-                    
+
                     base.populatefavs();
-                    
-                    
+
+
                 } );
-                
+
                 base.populatefavs();
-  
-            
-            
-            
+
+
+
+
         };
-        
+
         base.init();
     };
-    
-    
+
+
     $.fn.bus = function(options){
         return this.each(function(){
             (new $.bus(this, options));
         });
     };
-    
+
 })(jQuery);
 
 
@@ -427,13 +417,13 @@ $(document).ready(function() {
 function errorGettingPosition(err)
 {
     if(err.code==1){
-	alert("User denied geolocation.");
+    alert("User denied geolocation.");
     }else if(err.code==2){
-	alert("Position unavailable.");
+    alert("Position unavailable.");
     }else if(err.code==3){
-	alert("Timeout expired.");
+    alert("Timeout expired.");
     }else{
-	alert("ERROR:"+ err.message);
+    alert("ERROR:"+ err.message);
     }
 }
 
