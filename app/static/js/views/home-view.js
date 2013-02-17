@@ -5,11 +5,14 @@ define([
         'jquery',
         'underscore',
         'backbone',
+        'collections/bus-stops'
     ],
-    function($, _, Backbone) {
+    function($, _, Backbone, busStops) {
         var View = Backbone.View.extend({
             childViews: [],
+            collection: busStops,
             coords: [51, -0.1],
+            errors: {},
 
             initialize: function() {
                 var self = this;
@@ -39,10 +42,17 @@ define([
                     };
                 // Create map object in map_canvas element
                 this.map = new google.maps.Map(document.getElementById("mapCanvas"), myOptions);
-                google.maps.event.addListenerOnce(this.map, 'tilesloaded', function(){});
+                google.maps.event.addListenerOnce(this.map, 'tilesloaded', function(){
+                    console.log('Tiles Loaded');
+                });
                 this.getLocation(function(coords){
                     self.coords = coords;
                     self.centreMap();
+                    self.findBusStops();
+                });
+
+                google.maps.event.addListener(this.map, 'dblclick', function(evt){
+                    self.findBusStops(evt.latLng.Ya, evt.latLng.Za);
                 });
             },
 
@@ -72,11 +82,23 @@ define([
                         }
                     },
                     {
-                        'enableHighAccuracy':true,
-                        'timeout':10000,
-                        'maximumAge':0
+                        'enableHighAccuracy': true,
+                        'timeout': 10000,
+                        'maximumAge': 0
                     });
             },
+
+            findBusStops: function(lat, lng) {
+                var self = this;
+                this.collection.lat = lat;
+                this.collection.lng = lng;
+
+                this.collection.fetch();
+            },
+
+            plotMarkers: function() {
+                console.log(this.collection.items);
+            }
 
         });
 
