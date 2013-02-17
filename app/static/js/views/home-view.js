@@ -76,7 +76,7 @@ define([
                         'timeout':10000,
                         'maximumAge':0
                     });
-            }
+            },
 
         });
 
