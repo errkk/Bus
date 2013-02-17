@@ -24,6 +24,8 @@ define([
 
         });
 
-        return View;
+        return new View({
+            $el: $('#about-view')
+        });
     }
 );

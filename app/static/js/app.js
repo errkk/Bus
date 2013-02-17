@@ -5,7 +5,7 @@ define([
         'views/home-view',
         'views/about-view',
     ],
-    function($, _, Backbone, HomeView, AboutView) {
+    function($, _, Backbone, homeView, aboutView) {
 
         var body = document.body,
             flipWise = {
@@ -19,14 +19,14 @@ define([
                     direction = opts.direction,
                     fn = opts.fn,
                     wise = flipWise[direction],
-                    reset = function(){
+                    reset = function() {
                         console.log('restting');
                         $inEl.off('webkitAnimationEnd', reset);
                         $(document.body).removeClass('viewport-flip');
                         $outEl.addClass('hidden');
                         $inEl.removeClass('flip').removeClass(wise[1]);
                         $outEl.removeClass('flip').removeClass(wise[0]);
-                        if (fn) fn.apply();
+                        if (fn){ fn.apply(); }
                     };
 
                 $(document.body).addClass('viewport-flip');
@@ -86,23 +86,47 @@ define([
              * This gets called when the DOM is ready
              */
             init: function() {
+                var currentView;
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
-                // Kick of instance of homeview which instanciates child views
-                var self = this,
-                    homeView = new HomeView({
-                        $el: $('#view-home')
-                    }),
-                    aboutView = new AboutView({
-                        $el: $('#view-about')
-                    });
 
-                setTimeout(function(){
-                    flip({
-                        in: aboutView.$el,
-                        out: homeView.$el,
-                        direction: 'clockwise'
-                    })
-                }, 4000);
+                var Router = Backbone.Router.extend({
+                    routes: {
+                        '': 'main',
+                        'about': 'about'
+                    },
+                    initialize: function() {
+                        currentView = homeView;
+                    },
+                    main: function() {
+                        console.log('main');
+                        flip({
+                            in: homeView.$el,
+                            out: currentView.$el,
+                            direction: 'clockwise',
+                            fn: function() {
+                                currentView = homeView;
+                            }
+                        });
+                    },
+                    about: function() {
+                        console.log('about');
+                        flip({
+                            in: aboutView.$el,
+                            out: currentView.$el,
+                            direction: 'clockwise',
+                            fn: function() {
+                                currentView = aboutView;
+                            }
+                        });
+                    }
+                });
+
+                var router = new Router();
+                Backbone.history.start({
+                    pushState: true,
+                    slient: true
+                });
+
             }
         };
     }
