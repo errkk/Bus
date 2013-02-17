@@ -5,7 +5,7 @@ define([
         'views/home-view',
         'views/about-view',
     ],
-    function($, _, Backbone, homeView, aboutView) {
+    function($, _, Backbone, HomeView, AboutView) {
 
         var body = document.body,
             flipWise = {
@@ -86,7 +86,13 @@ define([
              * This gets called when the DOM is ready
              */
             init: function() {
-                var currentView;
+                var currentView
+                    homeView = new HomeView({
+                        $el: $('#view-home')
+                    }),
+                    aboutView = new AboutView({
+                        $el: $('#view-about')
+                    });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
 
                 var Router = Backbone.Router.extend({
@@ -99,14 +105,16 @@ define([
                     },
                     main: function() {
                         console.log('main');
-                        flip({
-                            in: homeView.$el,
-                            out: currentView.$el,
-                            direction: 'clockwise',
-                            fn: function() {
-                                currentView = homeView;
-                            }
-                        });
+                        if(currentView !== homeView){
+                            flip({
+                                in: homeView.$el,
+                                out: currentView.$el,
+                                direction: 'clockwise',
+                                fn: function() {
+                                    currentView = homeView;
+                                }
+                            });
+                        }
                     },
                     about: function() {
                         console.log('about');
@@ -123,7 +131,7 @@ define([
 
                 var router = new Router();
                 Backbone.history.start({
-                    pushState: true,
+                    pushState: false,
                     slient: true
                 });
 

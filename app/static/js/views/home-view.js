@@ -80,8 +80,6 @@ define([
 
         });
 
-        return new View({
-            $el: $('#home-view')
-        });
+        return View;
     }
 );
