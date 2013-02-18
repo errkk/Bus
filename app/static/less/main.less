@@ -1,7 +1,7 @@
 /**
  * Main Styles
  */
-
+@import 'modules/type.less';
 
 body{
     background: #ccc;
@@ -27,12 +27,16 @@ body{
 
 
 /* ====================
-    Panels
+    Countdown View
    ==================== */
-
-.panel{
-    min-height: 500px;
-    &.inview{
-        background: green;
+#screen {
+    background: #111;
+    width: 100%;
+    margin-bottom: 10px;
+    border: 5px solid #000;
+    overflow: hidden;
+    li {
+        clear: both;
+        padding: 0 15px;
     }
 }

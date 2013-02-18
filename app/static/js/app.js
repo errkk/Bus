@@ -4,8 +4,9 @@ define([
         'backbone',
         'views/home-view',
         'views/about-view',
+        'views/countdown-view',
     ],
-    function($, _, Backbone, HomeView, AboutView) {
+    function($, _, Backbone, HomeView, AboutView, CountdownView) {
 
         var body = document.body,
             flipWise = {
@@ -53,13 +54,13 @@ define([
                     wise = slideWise[direction],
                     reset = function(){
                         console.log('resetting', $inHeader);
-                        $outEl.add('hidden');
+                        $outEl.addClass('hidden');
                         $inEl.off('webkitAnimationEnd', reset, false);
                         $outEl.removeClass('sliding').removeClass(wise[0]);
                         $inEl.removeClass('sliding').removeClass(wise[1]);
                         $inHeader.removeClass('transparent');
                         $outHeader.removeClass('transparent');
-                        if (fn) fn.apply();
+                        if (fn){ fn.apply() };
                     };
                 $inEl.removeClass('hidden').addClass('sliding').addClass(wise[1]);
                 $outEl.addClass('sliding').addClass(wise[0]);
@@ -92,24 +93,27 @@ define([
                     }),
                     aboutView = new AboutView({
                         $el: $('#view-about')
+                    }),
+                    countdownView = new CountdownView({
+                        $el: $('#view-countdown')
                     });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
 
                 var Router = Backbone.Router.extend({
                     routes: {
                         '': 'main',
-                        'about': 'about'
+                        'about': 'about',
+                        'countdown': 'countdown'
                     },
                     initialize: function() {
                         currentView = homeView;
                     },
                     main: function() {
-                        console.log('main');
                         if(currentView !== homeView){
                             flip({
                                 in: homeView.$el,
                                 out: currentView.$el,
-                                direction: 'clockwise',
+                                direction: 'anticlockwise',
                                 fn: function() {
                                     currentView = homeView;
                                 }
@@ -117,13 +121,22 @@ define([
                         }
                     },
                     about: function() {
-                        console.log('about');
                         flip({
                             in: aboutView.$el,
                             out: currentView.$el,
                             direction: 'clockwise',
                             fn: function() {
                                 currentView = aboutView;
+                            }
+                        });
+                    },
+                    countdown: function() {
+                        flip({
+                            in: countdownView.$el,
+                            out: currentView.$el,
+                            direction: 'clockwise',
+                            fn: function() {
+                                currentView = countdownView;
                             }
                         });
                     }

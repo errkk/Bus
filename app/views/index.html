@@ -22,6 +22,18 @@
 
     <body>
         <div id="appLoader"></div>
+        <div class="view hidden" id="view-countdown">
+            <header>
+                <a href="#" class="header-button header-button-left header-button-back"><button>Back</button></a>
+                <h1 style="margin: 0 65px;">Arrivals</h1>
+            </header>
+            <div class="scroll">
+                <section id="screen">
+                    <ul class="">
+                    </ul>
+                </section>
+            </div>
+        </div>
 
         <div class="view hidden" id="view-about">
             <header>
@@ -51,6 +63,12 @@
                 Map
             <div>
         </div>
+
+        <script type="template" id="stopRow">
+            <li>
+                <span class="name"><%= name %></span>
+            </li>
+        </script>
 
     </body>
 </html>

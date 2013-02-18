@@ -74,7 +74,6 @@ td { vertical-align: top; }*/
          url('/static/fonts/dotmat-webfont.svg#DotMatrixNormal') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 
@@ -89,12 +88,6 @@ h3{font-size:1.1em; color:#3e2019; font-weight: 500;}*/
 
 #one .ui-content{background:#555;}
 #two .ui-content{padding:0;}
-#screen{background:#111; width:100%; margin-bottom:10px; border:5px solid #000; overflow:hidden;}
-    #screen p{ clear:both; padding:0 15px; text-shadow:0 1px 3px #f74; font-size: 1.1em;color:#f74; font-family: 'DotMatrixNormal', sans-serif; font-weight:300; text-transform: uppercase;}
-        
-        #screen p .destination{float:left;}
-        #screen p .countdown{float:right;}
-        #screen p .route{width:5em;float:left;}
 
 #map_canvas{width:100%; height: 100%; position:absolute; top:40px;left:0; bottom:0; margin:0;}
 .loading{background: #555 url(/static/img/design/loading.gif) 50% 50% no-repeat;}
