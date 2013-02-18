@@ -8,7 +8,7 @@ define([
     function(_, Backbone) {
         var Model = Backbone.Model.extend({
             initialize: function() {
-                console.log('Init bustop model');
+                console.log('Init bustop model', this.attributes);
             }
         });
         return Model;

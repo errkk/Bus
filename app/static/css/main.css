@@ -7,11 +7,8 @@ body {
 /* ====================
     Map View
    ==================== */
-#view-home {
-  background: blue;
-}
 #view-home #mapCanvas {
-  background: green;
+  background: #000000 url(/static/img/design/ajax-loader.gif) 50% 50% no-repeat;
   width: 100%;
   position: absolute;
   z-index: -1;

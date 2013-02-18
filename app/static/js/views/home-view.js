@@ -13,6 +13,7 @@ define([
             collection: busStops,
             coords: [51, -0.1],
             errors: {},
+            map: null,
 
             initialize: function() {
                 var self = this;
@@ -25,7 +26,9 @@ define([
                 });
 
                 this.render();
-                this.initMap();
+                setTimeout(function(){
+                    self.initMap();
+                }, 200);
             },
 
             render: function() {
@@ -45,15 +48,15 @@ define([
                 google.maps.event.addListenerOnce(this.map, 'tilesloaded', function(){
                     console.log('Tiles Loaded');
                 });
-                this.getLocation(function(coords){
+                google.maps.event.addListener(self.map, 'dblclick', function(evt){
+                    self.findBusStops(evt.latLng.Ya, evt.latLng.Za);
+                });
+                self.getLocation(function(coords){
                     self.coords = coords;
                     self.centreMap();
                     self.findBusStops();
                 });
 
-                google.maps.event.addListener(this.map, 'dblclick', function(evt){
-                    self.findBusStops(evt.latLng.Ya, evt.latLng.Za);
-                });
             },
 
             centreMap: function() {

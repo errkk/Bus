@@ -39,15 +39,21 @@ define([
             },
             success: function(data) {
                 var self = this,
-                    lines = data.split(/\r\n/);
+                    lines = data.split(/\r\n/),
+                    response_data = JSON.parse(lines.shift()),
+                    results = response_data[0],
+                    version = response_data[1],
+                    timestamp = response_data[3];
+
                 _(lines).each(function(i) {
-                    var line = i.split(',');
+                    var line = JSON.parse(i);
                     self.add({
                         name: line[1],
-                        bearing: line[2],
-                        indicator: line[3],
-                        lat: line[4],
-                        lng: line[5]
+                        id: line[2],
+                        bearing: line[3],
+                        indicator: line[4],
+                        lat: line[5],
+                        lng: line[6]
                     });
                 });
             },
