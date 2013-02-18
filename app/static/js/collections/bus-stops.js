@@ -45,6 +45,8 @@ define([
                     version = response_data[1],
                     timestamp = response_data[3];
 
+                self.trigger('update');
+
                 _(lines).each(function(i) {
                     var line = JSON.parse(i);
                     self.add({

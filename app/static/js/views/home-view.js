@@ -13,7 +13,6 @@ define([
             collection: busStops,
             coords: [51, -0.1],
             errors: {},
-            map: null,
 
             initialize: function() {
                 var self = this;
@@ -29,7 +28,14 @@ define([
                 setTimeout(function(){
                     self.initMap();
                 }, 200);
+
+                this.collection.on('update', this.plotMarkers);
+                this.collection.on('update', function() {
+                    console.log('collection update');
+                    self.plotMarkers();
+                });
             },
+
 
             render: function() {
                 var self = this;
@@ -41,14 +47,15 @@ define([
                     myOptions = {
                         zoom: 15,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        disableDefaultUI: true
+                        disableDefaultUI: true,
+                        disableDoubleClickZoom: true
                     };
                 // Create map object in map_canvas element
-                this.map = new google.maps.Map(document.getElementById("mapCanvas"), myOptions);
-                google.maps.event.addListenerOnce(this.map, 'tilesloaded', function(){
+                window.map = window.map || new google.maps.Map(document.getElementById("mapCanvas"), myOptions);
+                google.maps.event.addListenerOnce(window.map, 'tilesloaded', function(){
                     console.log('Tiles Loaded');
                 });
-                google.maps.event.addListener(self.map, 'dblclick', function(evt){
+                google.maps.event.addListener(window.map, 'dblclick', function(evt){
                     self.findBusStops(evt.latLng.Ya, evt.latLng.Za);
                 });
                 self.getLocation(function(coords){
@@ -61,8 +68,8 @@ define([
 
             centreMap: function() {
                 var centre = new google.maps.LatLng(this.coords.latitude, this.coords.longitude);
-                if( this.map ){
-                    this.map.setCenter(centre);
+                if( window.map ){
+                    window.map.setCenter(centre);
                 }
             },
 
@@ -100,8 +107,10 @@ define([
             },
 
             plotMarkers: function() {
-                console.log(this.collection.items);
-            }
+                if(!window.map){
+                    return;
+                }
+            },
 
         });
 
