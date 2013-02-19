@@ -11,7 +11,7 @@ define([
         var View = Backbone.View.extend({
             childViews: [],
             collection: busStops,
-            coords: [51, -0.1],
+            coords: {'latutude': 51.3, 'longitude': -0.091},
             errors: {},
 
             initialize: function() {
@@ -19,53 +19,61 @@ define([
                 // Cache window selector
                 self.$window = $(window);
                 this.$el = this.options.$el;
+
+                // Re-Centre map
                 this.$('.btn-refresh').on('click', function(evt) {
                     evt.preventDefault();
                     self.centreMap();
                 });
 
-                this.render();
                 setTimeout(function(){
                     self.initMap();
                 }, 200);
 
-                this.collection.on('update', this.plotMarkers);
                 this.collection.on('update', function() {
-                    console.log('collection update');
-                    self.plotMarkers();
+                    console.log('collection update', self.collection.items);
                 });
             },
 
-
-            render: function() {
-                var self = this;
-            },
-
+            /**
+             * Instanciate a GMaps object, save it on the window for other
+             * stuff to access.
+             */
             initMap: function() {
                 //Google maps defaults
                 var self = this,
+                    element = document.getElementById("mapCanvas"),
                     myOptions = {
                         zoom: 15,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
                         disableDefaultUI: true,
                         disableDoubleClickZoom: true
                     };
+
                 // Create map object in map_canvas element
-                window.map = window.map || new google.maps.Map(document.getElementById("mapCanvas"), myOptions);
+                window.map = window.map || new google.maps.Map(element, myOptions);
+
+                // Run a callback when the tiles are loaded
                 google.maps.event.addListenerOnce(window.map, 'tilesloaded', function(){
                     console.log('Tiles Loaded');
                 });
+
+                // Find busstops when the map is doubleclicked
                 google.maps.event.addListener(window.map, 'dblclick', function(evt){
-                    self.findBusStops(evt.latLng.Ya, evt.latLng.Za);
+                    self.findBusStops(evt.latLng.lat(), evt.latLng.lng());
                 });
+
+                // Get location from device, and centre map
                 self.getLocation(function(coords){
                     self.coords = coords;
                     self.centreMap();
-                    self.findBusStops();
+                    self.findBusStops(coords.latitude, coords.longitude);
                 });
-
             },
 
+            /**
+             * Centre the map on the current location
+             */
             centreMap: function() {
                 var centre = new google.maps.LatLng(this.coords.latitude, this.coords.longitude);
                 if( window.map ){
@@ -73,10 +81,15 @@ define([
                 }
             },
 
+            /**
+             * Try to find the location of the device
+             * from the HTML5 api
+             */
             getLocation: function(callback) {
                 navigator.geolocation.getCurrentPosition(
                     // Callback
                     function(pos) {
+                        console.log(pos.coords);
                         callback(pos.coords);
                     },
                     // Errback
@@ -98,19 +111,14 @@ define([
                     });
             },
 
+            /**
+             * Find busstops near the current location
+             */
             findBusStops: function(lat, lng) {
-                var self = this;
                 this.collection.lat = lat;
                 this.collection.lng = lng;
-
                 this.collection.fetch();
-            },
-
-            plotMarkers: function() {
-                if(!window.map){
-                    return;
-                }
-            },
+            }
 
         });
 

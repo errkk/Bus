@@ -21,9 +21,6 @@ define([
                     lng = this.lng || -0.1;
                 return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopCode1,StopPointName,Bearing,StopPointIndicator,Latitude,Longitude';
             },
-            initialize: function() {
-                _.bindAll(this, 'success');
-            },
             fetch: function() {
                 var self = this;
                 $.ajax({
@@ -34,9 +31,6 @@ define([
                 .success(function(data){ self.success.call(self, data) })
                 .error(function(data){ self.error.call(self, data) });
             },
-            initialize: function() {
-                console.log('Init bustop collection');
-            },
             success: function(data) {
                 var self = this,
                     lines = data.split(/\r\n/),
@@ -45,7 +39,10 @@ define([
                     version = response_data[1],
                     timestamp = response_data[3];
 
-                self.trigger('update');
+                if(results){
+                    self.trigger('update');
+                    console.log('Collection fetched ', results);
+                }
 
                 _(lines).each(function(i) {
                     var line = JSON.parse(i);
