@@ -41,7 +41,7 @@ def git_push(branch):
 
 
 def link_nginx():
-    conf_path = join(env.src_path, 'app', 'config', env.target,
+    conf_path = join(env.src_path, 'config', env.target,
                      'nginx.conf')
     nginx_available = join('/','etc','nginx','sites-available', 
                         '%(project)s_%(target)s.conf' % env)
