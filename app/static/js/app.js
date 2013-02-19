@@ -4,9 +4,9 @@ define([
         'backbone',
         'views/home-view',
         'views/about-view',
-        'views/countdown-view',
+        'views/arrival-view',
     ],
-    function($, _, Backbone, HomeView, AboutView, CountdownView) {
+    function($, _, Backbone, HomeView, AboutView, ArrivalView) {
 
         var body = document.body,
             flipWise = {
@@ -94,7 +94,7 @@ define([
                     aboutView = new AboutView({
                         $el: $('#view-about')
                     }),
-                    countdownView = new CountdownView({
+                    arrivalView = new ArrivalView({
                         $el: $('#view-countdown')
                     });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
@@ -103,7 +103,7 @@ define([
                     routes: {
                         '': 'main',
                         'about': 'about',
-                        'countdown': 'countdown'
+                        'countdown/:id': 'countdown'
                     },
                     initialize: function() {
                         currentView = homeView;
@@ -116,6 +116,7 @@ define([
                                 direction: 'anticlockwise',
                                 fn: function() {
                                     currentView = homeView;
+                                    currentView.trigger('activate');
                                 }
                             });
                         }
@@ -127,16 +128,19 @@ define([
                             direction: 'clockwise',
                             fn: function() {
                                 currentView = aboutView;
+                                currentView.trigger('activate');
                             }
                         });
                     },
-                    countdown: function() {
+                    countdown: function(id) {
+                        arrivalView.setId(id);
                         flip({
-                            in: countdownView.$el,
+                            in: arrivalView.$el,
                             out: currentView.$el,
                             direction: 'clockwise',
                             fn: function() {
-                                currentView = countdownView;
+                                currentView = arrivalView;
+                                currentView.trigger('activate');
                             }
                         });
                     }

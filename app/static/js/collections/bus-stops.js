@@ -19,7 +19,7 @@ define([
             url: function() {
                 var lat = this.lat || 51.5,
                     lng = this.lng || -0.1;
-                return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopCode1,StopPointName,Bearing,StopPointIndicator,Latitude,Longitude';
+                return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopID,StopPointName,Bearing,StopPointIndicator,Latitude,Longitude';
             },
             fetch: function() {
                 var self = this;

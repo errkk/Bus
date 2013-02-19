@@ -22,10 +22,10 @@
 #screen .destination {
   float: left;
 }
-#screen .countdown {
+#screen .time {
   float: right;
 }
-#screen .route {
+#screen .number {
   width: 5em;
   float: left;
 }
@@ -54,8 +54,12 @@ body {
   margin-bottom: 10px;
   border: 5px solid #000;
   overflow: hidden;
+  padding: 0;
+  margin: 0 0 10px 0;
 }
 #screen li {
+  display: block;
+  background: green;
   clear: both;
   padding: 0 15px;
 }

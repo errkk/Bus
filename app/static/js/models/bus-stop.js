@@ -10,7 +10,7 @@ define([
             initialize: function() {
                 this.createMarker();
                 this.on('activate', function(){
-                    window.location.hash = 'countdown';
+                    window.location.hash = 'countdown/' + this.get('id');
                 });
             },
             letterOffset: function() {
