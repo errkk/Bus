@@ -51,10 +51,6 @@ body {
 /* ====================
     Countdown View
    ==================== */
-.view > .scroll > section {
-  overflow: hidden;
-  overflow-y: auto;
-}
 .arrivals {
   background: #111;
   margin-bottom: 10px;
