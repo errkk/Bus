@@ -21,7 +21,6 @@ define([
                     fn = opts.fn,
                     wise = flipWise[direction],
                     reset = function() {
-                        console.log('restting');
                         $inEl.off('webkitAnimationEnd', reset);
                         $(document.body).removeClass('viewport-flip');
                         $outEl.addClass('hidden');
@@ -53,7 +52,6 @@ define([
                     fn = opts.fn,
                     wise = slideWise[direction],
                     reset = function(){
-                        console.log('resetting', $inHeader);
                         $outEl.addClass('hidden');
                         $inEl.off('webkitAnimationEnd', reset, false);
                         $outEl.removeClass('sliding').removeClass(wise[0]);

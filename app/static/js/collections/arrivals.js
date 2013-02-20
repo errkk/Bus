@@ -37,22 +37,18 @@ define([
                     response_data = JSON.parse(lines.shift()),
                     results = response_data[0],
                     version = response_data[1],
-                    timestamp = response_data[3];
-
-                if(results){
-                    self.trigger('update');
-                    console.log('Collection fetched ', results);
-                }
-
-                _(lines).each(function(i) {
-                    var line = JSON.parse(i);
-                    self.add({
-                        'number': line[1],
-                        'destination': line[2],
-                        'registration': line[3],
-                        'estimatedTime': line[4],
+                    timestamp = response_data[3],
+                    models = _(lines).map(function(i) {
+                        var line = JSON.parse(i);
+                        return new self.model({
+                            'number': line[1],
+                            'destination': line[2],
+                            'registration': line[3],
+                            'estimatedTime': line[4],
+                        });
                     });
-                });
+                this.reset(models);
+                this.trigger('update');
             },
             error: function(err) {
                 console.log('error CB', arguments);
