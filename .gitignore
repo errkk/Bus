@@ -1,0 +1,7 @@
+.vagrant
+*.pyc
+.DS_Store
+npm-debug.log
+log/
+Vagrantfile
+salt/
