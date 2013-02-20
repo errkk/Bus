@@ -31,7 +31,7 @@ define([
                 }, 200);
 
                 this.collection.on('update', function() {
-                    console.log('collection update', self.collection.items);
+                    //console.log('collection update', self.collection.items);
                 });
             },
 
@@ -49,13 +49,15 @@ define([
                         disableDefaultUI: true,
                         disableDoubleClickZoom: true
                     };
+                self.$('#mapCanvas').addClass('loading')
 
                 // Create map object in map_canvas element
-                window.map = window.map || new google.maps.Map(element, myOptions);
+                window.map = new google.maps.Map(element, myOptions);
 
                 // Run a callback when the tiles are loaded
                 google.maps.event.addListenerOnce(window.map, 'tilesloaded', function(){
                     console.log('Tiles Loaded');
+                    self.$('#mapCanvas').removeClass('loading');
                 });
 
                 // Find busstops when the map is doubleclicked
@@ -89,7 +91,6 @@ define([
                 navigator.geolocation.getCurrentPosition(
                     // Callback
                     function(pos) {
-                        console.log(pos.coords);
                         callback(pos.coords);
                     },
                     // Errback
