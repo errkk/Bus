@@ -1,27 +1,73 @@
 CACHE MANIFEST
-# rev 30 233354309
 
+CACHE
 
-CACHE:
-/
+# 1361479836
+# develop
+# 8b8edeb9c65dc66accae19d0ae906abe11fa8b26
+
+/static/favicon.ico
+/static/css/ios.css
+/static/css/main.css
 /static/css/style.css
-#/static/js/script.js
-/static/img/design/ico-stops.png
-/static/img/design/ico-direction.png
-/static/img/design/apple-touch-icon.png
-/static/img/design/home.png
-/static/img/design/loading.gif
-/static/img/design/btn-loading.gif
 /static/fonts/dotmat-webfont.eot
 /static/fonts/dotmat-webfont.svg
 /static/fonts/dotmat-webfont.ttf
 /static/fonts/dotmat-webfont.woff
+/static/img/design/2012-04-29 07.57.22.jpg
+/static/img/design/ajax-loader.gif
+/static/img/design/apple-touch-icon.png
+/static/img/design/apple-touch-item-114.png
+/static/img/design/apple-touch-item-512.png
+/static/img/design/apple-touch-item-72.png
+/static/img/design/btn-loading.gif
+/static/img/design/home.png
+/static/img/design/ico-direction.png
+/static/img/design/ico-stops.png
+/static/img/design/loading.gif
+/static/img/ios/activity-indicator.png
+/static/img/ios/back-button-5.png
+/static/img/ios/back-button-active-5.png
+/static/img/ios/back-button-active.png
+/static/img/ios/back-button.png
+/static/img/ios/button-5.png
+/static/img/ios/button-active-5.png
+/static/img/ios/button-active.png
+/static/img/ios/button.png
+/static/img/ios/close-button.png
+/static/img/ios/detail-disclosure-button.png
+/static/img/ios/disclosure-indicator-2.png
+/static/img/ios/disclosure-indicator.png
+/static/img/ios/nav-bar-5.png
+/static/img/ios/nav-bar-mini-5.png
+/static/img/ios/nav-bar-mini.png
+/static/img/ios/nav-bar.png
+/static/img/ios/refresh-icon.png
+/static/img/ios/silver-button-active.png
+/static/img/ios/silver-button-bar.png
+/static/img/ios/silver-button.png
+/static/img/ios/silver-nav-bar.png
+/static/js/app.js
+/static/js/config.js
+/static/js/script.js
+/static/js/collections/arrivals.js
+/static/js/collections/bus-stops.js
+/static/js/lib/backbone.amd.js
+/static/js/lib/jquery.1.9.0.js
+/static/js/lib/underscore.amd.js
+/static/js/lib/require/domready.js
+/static/js/lib/require/require.js
+/static/js/lib/require/text.js
+/static/js/models/arrival.js
+/static/js/models/bus-stop.js
+/static/js/views/about-view.js
+/static/js/views/arrival-view.js
+/static/js/views/home-view.js
+/static/less/main.less
+/static/less/modules/type.less
 
-http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js
-http://code.jquery.com/jquery-1.6.2.min.js
-http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css
-http://code.jquery.com/mobile/1.0b3/images/icons-18-white.png
 
+NETWORK
 
-NETWORK:
-*
+/api/*
+
