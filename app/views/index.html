@@ -23,7 +23,6 @@
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-971803-20']);
-            _gaq.push(['_trackPageview']);
             (function() {
                 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
                 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -42,56 +41,6 @@
             <div class="scroll striped">
                 <section class="arrivals">
                     <ul class="arrivals-list">
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
-                        <li>
-                            <span class="number">123</span>
-                            <span class="destination">Crouch End</span>
-                            <span class="time">3 mins</span>
-                        </li>
                     </ul>
                 </section>
             </div>
@@ -122,9 +71,8 @@
             </header>
             <div class="scroll striped">
                 <section>
-                    <ul class="grouped-tableview grouped-tableview-links">
+                    <ul class="tableview tableview-links">
                     </ul>
-                    <p class="foot-label">Data from TFL</p>
                 </section>
             </div>
         </div>
@@ -134,9 +82,10 @@
                 <h1 style="margin: 0 65px;">Bus Stops</h1>
                 <a href="#na" class="btn-refresh header-button header-button-icon header-button-right" id="view-home-refresh"><button><i class="icon-refresh">Refresh</i></button></a>
             </header>
-            <div id="mapCanvas">
-                Map
-            <div>
+            <menu class="menu-bottom">
+                <a class=".header-button button" href="#list">List</a>
+            </menu>
+            <div id="mapCanvas"><div>
         </div>
 
         <script type="template" id="stopRow">
@@ -147,6 +96,20 @@
             </li>
         </script>
 
+        <script type="template" id="listRow">
+            <li>
+                <a href="#countdown/<%= id %>" class="detail-disclosure ">
+                    <div class="indicator"><%= indicator %></div>
+                    <div class="story">
+                        <b><%= name %></b>
+                        <span class="metadata">
+                            <span class="inline-block"><%= towards %></span>
+                        </span>
+                    </div>
+                </a>
+                <a href="#countdown/<%= id %>" class="detail-disclosure-button"><span></span></a>
+            </li>
+        </script>
     </body>
 </html>
 
