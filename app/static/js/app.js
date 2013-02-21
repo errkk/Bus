@@ -5,9 +5,10 @@ define([
         'views/home-view',
         'views/about-view',
         'views/arrival-view',
+        'views/list-view',
         'tracking'
     ],
-    function($, _, Backbone, HomeView, AboutView, ArrivalView, tracking) {
+    function($, _, Backbone, HomeView, AboutView, ArrivalView, ListView, tracking) {
 
         var body = document.body,
             flipWise = {
@@ -95,6 +96,9 @@ define([
                     }),
                     arrivalView = new ArrivalView({
                         $el: $('#view-countdown')
+                    }),
+                    listView = new ListView({
+                        $el: $('#view-list')
                     });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
 
@@ -102,7 +106,8 @@ define([
                     routes: {
                         '': 'main',
                         'about': 'about',
-                        'countdown/:id': 'countdown'
+                        'countdown/:id': 'countdown',
+                        'list': 'list'
                     },
                     initialize: function() {
                         currentView = homeView;
@@ -134,15 +139,31 @@ define([
                         });
                     },
                     countdown: function(id) {
+                        var direction = 'clockwise';
+                        if(currentView === listView){
+                            direction = 'anticlockwise';
+                        }
                         arrivalView.setId(id);
                         flip({
                             in: arrivalView.$el,
                             out: currentView.$el,
-                            direction: 'clockwise',
+                            direction: direction,
                             fn: function() {
                                 currentView = arrivalView;
                                 currentView.trigger('activate');
                                 tracking.trackPageView('countdown/' + id);
+                            }
+                        });
+                    },
+                    list: function() {
+                        flip({
+                            in: listView.$el,
+                            out: currentView.$el,
+                            direction: 'clockwise',
+                            fn: function() {
+                                currentView = listView;
+                                currentView.trigger('activate');
+                                tracking.trackPageView('list');
                             }
                         });
                     }

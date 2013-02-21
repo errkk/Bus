@@ -29,7 +29,7 @@ def manifest(branch):
                     capture=True)
     with open(manifest, 'w') as fh:
         fh.write('CACHE MANIFEST\n\n')
-        fh.write('CACHE\n\n')
+        fh.write('CACHE:\n\n')
         fh.write('# {0}\n'.format(env.timestamp))
         fh.write('# {0}\n'.format(env.branch))
         fh.write('# {0}\n\n'.format(env.rev))
@@ -40,8 +40,10 @@ def manifest(branch):
                     if path != manifest:
                         rel_path = relpath(path, BUILD_DIR)
                         fh.write('/static/{0}\n'.format(rel_path))
-        fh.write('\n\nNETWORK\n\n')
-        fh.write('/api/*\n\n')
+        fh.write('\n\nNETWORK:\n')
+        fh.write('/api/\n')
+        fh.write('http://*\n')
+        fh.write('https://*\n')
     local("cat %s" % manifest)
 
 

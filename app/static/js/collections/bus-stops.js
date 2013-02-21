@@ -20,7 +20,7 @@ define([
             url: function() {
                 var lat = this.lat || 51.5,
                     lng = this.lng || -0.1;
-                return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopID,StopPointName,Bearing,StopPointIndicator,Latitude,Longitude';
+                return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopID,StopPointName,StopPointIndicator,Towards,Latitude,Longitude';
             },
             fetch: function() {
                 var self = this;
@@ -38,24 +38,21 @@ define([
                     response_data = JSON.parse(lines.shift()),
                     results = response_data[0],
                     version = response_data[1],
-                    timestamp = response_data[3];
-
-                if(results){
-                    self.trigger('update');
-                    console.log('Collection fetched ', results);
-                }
-
-                _(lines).each(function(i) {
-                    var line = JSON.parse(i);
-                    self.add({
-                        name: line[1],
-                        id: line[2],
-                        bearing: line[3],
-                        indicator: line[4],
-                        lat: line[5],
-                        lng: line[6]
+                    timestamp = response_data[3],
+                    models = _(lines).map(function(i) {
+                        var line = JSON.parse(i);
+                        return new self.model({
+                            name: line[1],
+                            id: line[2],
+                            towards: line[3],
+                            indicator: line[4],
+                            lat: line[5],
+                            lng: line[6]
+                        });
                     });
-                });
+                this.reset(models);
+                this.trigger('update');
+
                 tracking.trackEvent('Map', 'Find Stops', '');
             },
             error: function(err) {
