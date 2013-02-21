@@ -1,5 +1,6 @@
 import time
-from os.path import join
+from os.path import join, relpath
+from os import walk
 from fabric.api import env, run, local, cd, sudo
 from fabric.decorators import hosts
 from fabric.utils import puts
@@ -10,10 +11,35 @@ env.root = '/e/data/www/me/%s' % env.project
 env.env = '/e/data/python-virtualenvs/busapp-%s'
 env.hosts = ['web2.errkk.co']
 env.user = 'ubuntu'
+BUILD_DIR = 'app/static/'
+print BUILD_DIR
 
 
 def paths():
     pp( env )
+
+def manifest(branch):
+    env.timestamp = str(int(time.time()))
+    env.branch = branch
+    manifest = 'app/cache.manifest'
+    env.rev = local('git log -1 --format=format:%%H %s@{0}' % env.branch,
+                    capture=True)
+    with open(manifest, 'w') as fh:
+        fh.write('CACHE MANIFEST\n\n')
+        fh.write('CACHE\n\n')
+        fh.write('# {0}\n'.format(env.timestamp))
+        fh.write('# {0}\n'.format(env.branch))
+        fh.write('# {0}\n\n'.format(env.rev))
+        for root, dirs, files in walk(BUILD_DIR):
+            for filename in files:
+                path = join(root, filename)
+                if filename[0] != '.':
+                    if path != manifest:
+                        rel_path = relpath(path, BUILD_DIR)
+                        fh.write('/static/{0}\n'.format(rel_path))
+        fh.write('\n\nNETWORK\n\n')
+        fh.write('/api/*\n\n')
+    local("cat %s" % manifest)
 
 def stage():
     env.target = 'stage'
