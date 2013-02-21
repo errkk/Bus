@@ -4,7 +4,10 @@ from os import walk
 from fabric.api import env, run, local, cd, sudo
 from fabric.decorators import hosts
 from fabric.utils import puts
+from fabric.operations import prompt
 from pprint import pprint as pp
+from time import strftime
+from datetime import datetime
 
 env.project = 'busapp'
 env.root = '/e/data/www/me/%s' % env.project
@@ -41,6 +44,18 @@ def manifest(branch):
         fh.write('/api/*\n\n')
     local("cat %s" % manifest)
 
+
+def version():
+    with cd(env.src_path):
+        with open('version_number.txt', 'r+') as fh:
+            prev = fh.read()
+            print 'Previous version number: {0}'.format(prev)
+        with open('version_number.txt', 'w') as fh:
+            new_version = prompt('New version number?')
+            fh.write(new_version)
+        run('echo "{0}" > app/static/version_number.txt'.format(new_version))
+
+
 def stage():
     env.target = 'stage'
     env.src_path = join(env.root, '%(project)s_%(target)s' % env, 'src')
@@ -57,6 +72,8 @@ def live():
 
 def git_push(branch):
     env.timestamp = str(int(time.time()))
+    nice_time = datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
+    version = prompt('Please enter version')
     env.branch = branch
     env.rev = local('git log -1 --format=format:%%H %s@{0}' % env.branch,
                     capture=True)
@@ -64,6 +81,8 @@ def git_push(branch):
 
     with cd(env.src_path):
         run('git reset --hard %(rev)s' % env)
+        run('echo "{0}\n{1}\n{2}" > app/version.txt'.format(env.rev, nice_time, version))
+
 
 
 def link_nginx():
