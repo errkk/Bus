@@ -83,6 +83,9 @@ def git_push(branch):
         run('git reset --hard %(rev)s' % env)
         run('echo "{0}\n{1}\n{2}" > app/version.txt'.format(env.rev, nice_time, version))
 
+    if env.target == 'live':
+        version()
+
 
 
 def link_nginx():
