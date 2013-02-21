@@ -5,8 +5,9 @@ define([
         'views/home-view',
         'views/about-view',
         'views/arrival-view',
+        'tracking'
     ],
-    function($, _, Backbone, HomeView, AboutView, ArrivalView) {
+    function($, _, Backbone, HomeView, AboutView, ArrivalView, tracking) {
 
         var body = document.body,
             flipWise = {
@@ -115,6 +116,7 @@ define([
                                 fn: function() {
                                     currentView = homeView;
                                     currentView.trigger('activate');
+                                    tracking.trackPageView('map');
                                 }
                             });
                         }
@@ -127,6 +129,7 @@ define([
                             fn: function() {
                                 currentView = aboutView;
                                 currentView.trigger('activate');
+                                tracking.trackPageView('about');
                             }
                         });
                     },
@@ -139,6 +142,7 @@ define([
                             fn: function() {
                                 currentView = arrivalView;
                                 currentView.trigger('activate');
+                                tracking.trackPageView('countdown/' + id);
                             }
                         });
                     }

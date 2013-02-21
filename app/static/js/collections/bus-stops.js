@@ -5,9 +5,10 @@ define([
         'jquery',
         'underscore',
         'backbone',
-        'models/bus-stop'
+        'models/bus-stop',
+        'tracking'
     ],
-    function($, _, Backbone, Model) {
+    function($, _, Backbone, Model, tracking) {
         var Collection = Backbone.Collection.extend({
             model: Model,
             lat: 51.5,
@@ -55,9 +56,11 @@ define([
                         lng: line[6]
                     });
                 });
+                tracking.trackEvent('Map', 'Find Stops', '');
             },
             error: function(err) {
                 console.log('error CB', arguments);
+                tracking.trackEvent('Error', 'Cant busstops', '');
             }
         });
         return new Collection();

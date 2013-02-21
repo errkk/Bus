@@ -5,9 +5,10 @@ define([
         'jquery',
         'underscore',
         'backbone',
-        'models/arrival'
+        'models/arrival',
+        'tracking'
     ],
-    function($, _, Backbone, Model) {
+    function($, _, Backbone, Model, tracking) {
         var Collection = Backbone.Collection.extend({
             model: Model,
             responses: {
@@ -49,9 +50,11 @@ define([
                     });
                 this.reset(models);
                 this.trigger('update');
+                tracking.trackEvent('Arrivals', 'Get arrival data', this.busStopId, results);
             },
             error: function(err) {
                 console.log('error CB', arguments);
+                tracking.trackEvent('Error', 'Cant get arrival data', this.busStopId, results);
             }
         });
         return new Collection();

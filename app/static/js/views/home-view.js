@@ -5,9 +5,10 @@ define([
         'jquery',
         'underscore',
         'backbone',
-        'collections/bus-stops'
+        'collections/bus-stops',
+        'tracking'
     ],
-    function($, _, Backbone, busStops) {
+    function($, _, Backbone, busStops, tracking) {
         var View = Backbone.View.extend({
             childViews: [],
             collection: busStops,
@@ -24,6 +25,7 @@ define([
                 this.$('.btn-refresh').on('click', function(evt) {
                     evt.preventDefault();
                     self.centreMap();
+                    tracking.trackEvent('Map', 'Centre Button', '');
                 });
 
                 setTimeout(function(){
