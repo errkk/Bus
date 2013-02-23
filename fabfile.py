@@ -55,6 +55,8 @@ def version():
         with open('version_number.txt', 'w') as fh:
             new_version = prompt('New version number?')
             fh.write(new_version)
+        cmd = """sed -i 's/\<p class\=\"foot-label version\"\>(.*)\<\/p\>/\<p class\=\"foot-label version\"\>{0}\<\/p\>/g' app/views/index.html""".format(new_version)
+        print cmd
         run('echo "{0}" > app/static/version_number.txt'.format(new_version))
 
 
@@ -75,7 +77,6 @@ def live():
 def git_push(branch):
     env.timestamp = str(int(time.time()))
     nice_time = datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
-    version = prompt('Please enter version')
     env.branch = branch
     env.rev = local('git log -1 --format=format:%%H %s@{0}' % env.branch,
                     capture=True)
@@ -83,10 +84,9 @@ def git_push(branch):
 
     with cd(env.src_path):
         run('git reset --hard %(rev)s' % env)
-        run('echo "{0}\n{1}\n{2}" > app/version.txt'.format(env.rev, nice_time, version))
+        run('echo "{0}\n{1}" > app/version.txt'.format(env.rev, nice_time))
 
-    if env.target == 'live':
-        version()
+    version()
 
 
 

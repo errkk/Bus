@@ -5,3 +5,4 @@ npm-debug.log
 log/
 Vagrantfile
 salt/
+version_number.txt
