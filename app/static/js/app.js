@@ -151,6 +151,7 @@ define([
                             direction = 'anticlockwise';
                         }
                         arrivalView.setId(id);
+                        window.busStop = busStopsCollection.get(id);
                         flip({
                             in: arrivalView.$el,
                             out: currentView.$el,

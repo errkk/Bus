@@ -6,9 +6,9 @@ define([
         'underscore',
         'backbone',
         'collections/arrivals',
-        'collections/bus-stops'
+        'collections/favs'
     ],
-    function($, _, Backbone, arrivalsCollection, busStopsCollection) {
+    function($, _, Backbone, arrivalsCollection, favsCollection) {
         var View = Backbone.View.extend({
             childViews: [],
             template: _.template($('#stopRow').html()),
@@ -22,15 +22,17 @@ define([
                 this.collection = arrivalsCollection;
                 _.bindAll(this, 'render');
                 this.on('activate', function() {
-                    console.log('Arrivals View', this.collection.busStopId);
-                    this.collection.fetch();
+                    console.log('Arrivals View', self.collection.busStopId);
+                    self.collection.fetch();
                 });
                 this.collection.on('update', this.render);
 
-
-                this.$('.btn-fav').on('click', function() {
-                    console.log(this.busStop);
+                this.$('.btn-fav').on('click', function(evt) {
+                    evt.preventDefault();
+                    favsCollection.addCurrent();
                 });
+
+                self.$('.btn-fav').hide();
             },
 
             render: function() {
@@ -46,6 +48,10 @@ define([
                     });
                     $list.append(html);
                 });
+                if(window.busStop) {
+                    self.$('h1').text(window.busStop.get('name'));
+                    self.$('.btn-fav').fadeIn();
+                }
 
             },
 
@@ -54,13 +60,6 @@ define([
              */
             setId: function(id) {
                 this.collection.busStopId = id;
-                self.busStop = busStopsCollection.get(id);
-                busStopsCollection.on('update', function() {
-                    self.busStop = busStopsCollection.get(id);
-                    if(self.busStop) {
-                        self.$('h1').text(self.busStop.get('name'));
-                    }
-                });
             }
 
         });

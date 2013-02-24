@@ -12,8 +12,12 @@ define([
         var Collection = Backbone.Collection.extend({
             model: Model,
             initialize: function() {
-                console.log('init favs');
-                this.fetch();
+                console.log('init favs', this);
+                _.bindAll(this, 'addCurrent');
+
+            },
+            addCurrent: function() {
+                console.log(this, window.busStop);
             },
             fetch: function() {
                 var data = localStorage.getItem('fav_bus_stops');

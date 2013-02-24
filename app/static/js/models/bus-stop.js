@@ -4,16 +4,19 @@
 define([
         'underscore',
         'backbone',
-        'collections/favs'
+        'views/arrival-view'
     ],
-    function(_, Backbone, favsCollection) {
+    function(_, Backbone, arrivalsView) {
         var Model = Backbone.Model.extend({
             idAttribute: 'id',
             initialize: function() {
+                var self = this;
                 this.createMarker();
+                // Click from google map
                 this.on('activate', function(){
                     window.location.hash = 'countdown/' + this.get('id');
                 });
+
             },
             letterOffset: function() {
                 var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -51,13 +54,6 @@ define([
                     });
 
                 return marker;
-            },
-
-            addFav: function() {
-                favsCollection.add(this).save();
-            },
-            unFav: function() {
-                favsCollection.remove(this).save();
             }
 
 

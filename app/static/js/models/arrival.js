@@ -7,9 +7,6 @@ define([
     ],
     function(_, Backbone) {
         var Model = Backbone.Model.extend({
-            initialize: function() {
-                console.log('Arrival init');
-            },
             getTime: function() {
                 return this.get('estimatedTime') ? new Date(this.get('estimatedTime')) : false;
             },
