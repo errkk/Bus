@@ -44,14 +44,14 @@ define([
             initMap: function() {
                 //Google maps defaults
                 var self = this,
-                    element = document.getElementById("mapCanvas"),
+                    element = this.$("#mapCanvas")[0],
                     myOptions = {
                         zoom: 15,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
                         disableDefaultUI: true,
                         disableDoubleClickZoom: true
                     };
-                self.$('#mapCanvas').addClass('loading')
+                self.$('#mapCanvas').addClass('loading');
 
                 // Create map object in map_canvas element
                 window.map = new google.maps.Map(element, myOptions);
@@ -70,8 +70,8 @@ define([
                 // Get location from device, and centre map
                 self.getLocation(function(coords){
                     self.coords = coords;
-                    self.centreMap();
                     self.findBusStops(coords.latitude, coords.longitude);
+                    self.centreMap();
                 });
             },
 
