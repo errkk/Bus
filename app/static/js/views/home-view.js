@@ -55,16 +55,18 @@ define([
                     };
                 self.$('#mapCanvas').addClass('loading');
 
+                // Time how long the tiles take to load.
+                // If its more than 15000ms then google maps probs hasn't loaded :(
                 this.tile_check_interval = setInterval(function() {
+                    self.tile_interval_count = self.tile_interval_count + 100;
                     if(self.has_tilesloaded){
-                        tracking.trackEvent('Map', 'Tiles Loaded', self.tile_interval_count);
+                        tracking.trackEvent('Map', 'Tiles Loaded', self.tile_interval_count + 'ms');
                         clearInterval(self.tile_check_interval);
                         return;
                     }
-                    self.tile_interval_count = self.tile_interval_count + 0.1;
-                    if(self.tile_interval_count > 10) {
-                        tracking.trackEvent('Map', 'Tiles not loaded intime');
-                        window.location.reload();
+                    if(self.tile_interval_count > 15000) {
+                        tracking.trackEvent('Map', 'Tiles not loaded in time');
+                        window.location.reload(true);
                     }
                 }, 100);
 
