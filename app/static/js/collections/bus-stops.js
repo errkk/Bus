@@ -53,11 +53,11 @@ define([
                 this.reset(models);
                 this.trigger('update');
 
-                tracking.trackEvent('Map', 'Find Stops', '');
+                tracking.trackEvent('Map', 'Found Stops', results);
             },
             error: function(err) {
                 console.log('error CB', arguments);
-                tracking.trackEvent('Error', 'Cant busstops', '');
+                tracking.trackEvent('Error', 'Cant fetch busstops', '');
             }
         });
         return new Collection();

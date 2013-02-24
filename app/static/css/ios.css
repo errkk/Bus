@@ -46,6 +46,17 @@ i.icon-refresh{
     overflow: hidden;
     text-indent: -999px;
 }
+i.icon-locate{
+    display: inline-block;
+    width: 15px;
+    height: 16px;
+    background: transparent url(../img/ios/locate-icon.png) no-repeat;
+    -webkit-background-size: 15px 15px;
+    background-size: 15px 15px;
+    vertical-align: text-bottom;
+    overflow: hidden;
+    text-indent: -999px;
+}
 
 header.fake{
     pointer-events: none;
