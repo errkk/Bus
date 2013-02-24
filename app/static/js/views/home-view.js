@@ -14,6 +14,8 @@ define([
             collection: busStops,
             coords: {'latutude': 51.3, 'longitude': -0.091},
             errors: {},
+            has_tilesloaded: false,
+            tile_interval_count: 0,
 
             initialize: function() {
                 var self = this;
@@ -53,12 +55,25 @@ define([
                     };
                 self.$('#mapCanvas').addClass('loading');
 
+                this.tile_check_interval = setInterval(function() {
+                    if(self.has_tilesloaded){
+                        tracking.trackEvent('Map', 'Tiles Loaded', self.tile_interval_count);
+                        clearInterval(self.tile_check_interval);
+                        return;
+                    }
+                    self.tile_interval_count = self.tile_interval_count + 0.1;
+                    if(self.tile_interval_count > 10) {
+                        tracking.trackEvent('Map', 'Tiles not loaded intime');
+                        window.location.reload();
+                    }
+                }, 100);
+
                 // Create map object in map_canvas element
                 window.map = new google.maps.Map(element, myOptions);
 
                 // Run a callback when the tiles are loaded
                 google.maps.event.addListenerOnce(window.map, 'tilesloaded', function(){
-                    console.log('Tiles Loaded');
+                    self.has_tilesloaded = true;
                     self.$('#mapCanvas').removeClass('loading');
                 });
 
