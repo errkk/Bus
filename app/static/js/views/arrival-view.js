@@ -5,9 +5,10 @@ define([
         'jquery',
         'underscore',
         'backbone',
-        'collections/arrivals'
+        'collections/arrivals',
+        'collections/bus-stops'
     ],
-    function($, _, Backbone, arrivalsCollection) {
+    function($, _, Backbone, arrivalsCollection, busStopsCollection) {
         var View = Backbone.View.extend({
             childViews: [],
             template: _.template($('#stopRow').html()),
@@ -20,12 +21,16 @@ define([
                 // Arrivals
                 this.collection = arrivalsCollection;
                 _.bindAll(this, 'render');
-                this.render();
                 this.on('activate', function() {
                     console.log('Arrivals View', this.collection.busStopId);
                     this.collection.fetch();
                 });
                 this.collection.on('update', this.render);
+
+
+                this.$('.btn-fav').on('click', function() {
+                    console.log(this.busStop);
+                });
             },
 
             render: function() {
@@ -49,6 +54,13 @@ define([
              */
             setId: function(id) {
                 this.collection.busStopId = id;
+                self.busStop = busStopsCollection.get(id);
+                busStopsCollection.on('update', function() {
+                    self.busStop = busStopsCollection.get(id);
+                    if(self.busStop) {
+                        self.$('h1').text(self.busStop.get('name'));
+                    }
+                });
             }
 
         });

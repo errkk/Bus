@@ -14,7 +14,13 @@ define([
 
             initialize: function() {
                 _.bindAll(this, 'render');
-                this.collection = busStopsCollection;
+                // Override collection if one is passed
+                // (bus stops from api, or favs)
+                if(this.options.collection) {
+                    this.collection = this.options.collection;
+                }else{
+                    this.collection = busStopsCollection;
+                }
                 this.$el = this.options.$el;
                 this.collection.on('update', this.render);
             },
@@ -22,10 +28,8 @@ define([
             render: function() {
                 var self = this;
                 $list = this.$('.tableview');
-                console.log(this.collection);
                 $list.html('');
                 _(this.collection.models).each(function(model) {
-                    console.log(model);
                     var html = self.template({
                         indicator: model.get('indicator', ''),
                         name: model.get('name'),

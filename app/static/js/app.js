@@ -6,9 +6,11 @@ define([
         'views/about-view',
         'views/arrival-view',
         'views/list-view',
+        'collections/favs',
+        'collections/bus-stops',
         'tracking'
     ],
-    function($, _, Backbone, HomeView, AboutView, ArrivalView, ListView, tracking) {
+    function($, _, Backbone, HomeView, AboutView, ArrivalView, ListView, favsCollection, busStopsCollection, tracking) {
 
         var body = document.body,
             flipWise = {
@@ -99,6 +101,10 @@ define([
                     }),
                     listView = new ListView({
                         $el: $('#view-list')
+                    }),
+                    favsView = new ListView({
+                        collection: favsCollection,
+                        $el: $('#view-favs')
                     });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
 
@@ -107,7 +113,8 @@ define([
                         '': 'main',
                         'about': 'about',
                         'countdown/:id': 'countdown',
-                        'list': 'list'
+                        'list': 'list',
+                        'favs': 'favs'
                     },
                     initialize: function() {
                         currentView = homeView;
@@ -164,6 +171,18 @@ define([
                                 currentView = listView;
                                 currentView.trigger('activate');
                                 tracking.trackPageView('list');
+                            }
+                        });
+                    },
+                    favs: function() {
+                        flip({
+                            in: favsView.$el,
+                            out: currentView.$el,
+                            direction: 'clockwise',
+                            fn: function() {
+                                currentView = favsView;
+                                currentView.trigger('activate');
+                                tracking.trackPageView('favourites');
                             }
                         });
                     }

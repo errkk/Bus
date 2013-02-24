@@ -4,9 +4,11 @@
 define([
         'underscore',
         'backbone',
+        'collections/favs'
     ],
-    function(_, Backbone) {
+    function(_, Backbone, favsCollection) {
         var Model = Backbone.Model.extend({
+            idAttribute: 'id',
             initialize: function() {
                 this.createMarker();
                 this.on('activate', function(){
@@ -49,6 +51,13 @@ define([
                     });
 
                 return marker;
+            },
+
+            addFav: function() {
+                favsCollection.add(this).save();
+            },
+            unFav: function() {
+                favsCollection.remove(this).save();
             }
 
 

@@ -23,7 +23,6 @@ define([],
         function handleCacheEvent(evt) {
             trackEvent('Cache', evt.type);
         }
-        console.log(window.version);
         appCache.addEventListener('cached', handleCacheEvent, false);
         appCache.addEventListener('checking', handleCacheEvent, false);
         appCache.addEventListener('downloading', handleCacheEvent, false);
