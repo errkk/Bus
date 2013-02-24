@@ -15,8 +15,14 @@ env.env = '/e/data/python-virtualenvs/busapp-%s'
 env.hosts = ['web2.errkk.co']
 env.user = 'ubuntu'
 BUILD_DIR = 'app/static/'
-print BUILD_DIR
 
+cache_exempt = [
+    'http://www.google-analytics.com/ga.js',
+    'http://maps.google.com/maps/api/',
+    'http://maps.gstatic.com/',
+    'http://maps.googleapis.com/',
+    'http://csi.gstatic.com/'
+]
 
 def paths():
     pp( env )
@@ -44,6 +50,8 @@ def manifest(branch):
         fh.write('/api/\n')
         fh.write('http://*\n')
         fh.write('https://*\n')
+        for url in cache_exempt:
+            fh.write('{0}\n'.format(url))
     local("cat %s" % manifest)
 
 

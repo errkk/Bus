@@ -929,7 +929,7 @@ ol.grouped-tableview-links li>a.disclosure.tappable-active:after{
 }
 
 #y-icon{
-    background: transparent url(../icons/touch-icon.png) no-repeat;
+    background: transparent url(../img/design/apple-touch-icon-72.png) no-repeat;
     background-size: 57px 57px;
     width: 57px;
     height: 57px;
@@ -940,7 +940,7 @@ ol.grouped-tableview-links li>a.disclosure.tappable-active:after{
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
     only screen and (min-device-pixel-ratio: 1.5) {
     #y-icon{
-        background-image: url(../icons/touch-icon-114.png);
+        background-image: url(../img/design/apple-touch-icon-114.png);
     }
 }
 #app-desc{
@@ -1546,13 +1546,13 @@ ol.grouped-tableview-links li>a.disclosure.tappable-active:after{
         width: 72px;
         height: 72px;
         background-size: 72px 72px;
-        background-image: url(../img/design/apple-touch-icon-72.png);
+        background-image: url(../img/design/design/apple-touch-icon-72.png);
         border-radius: 12px;
     }
     @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
     only screen and (min-device-pixel-ratio: 1.5) {
         #y-icon{
-            background-image: url(../icons/touch-icon-144.png);
+            background-image: url(../img/design/apple-touch-icon-144.png);
         }
     }
     #app-desc{

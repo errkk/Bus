@@ -2,9 +2,9 @@ CACHE MANIFEST
 
 CACHE:
 
-# 1361489124
+# 1361705527
 # develop
-# daa690c92db15a64ed5e1d75efe7c142a3d69ed8
+# dc740b9ad0571845332ab2ed728b8713325abaa3
 
 /static/favicon.ico
 /static/css/ios.css
@@ -16,14 +16,18 @@ CACHE:
 /static/fonts/dotmat-webfont.woff
 /static/img/design/2012-04-2907.57.22.jpg
 /static/img/design/ajax-loader.gif
+/static/img/design/apple-touch-icon-114.png
+/static/img/design/apple-touch-icon-512.png
+/static/img/design/apple-touch-icon-72.png
 /static/img/design/apple-touch-icon.png
-/static/img/design/apple-touch-item-114.png
-/static/img/design/apple-touch-item-512.png
 /static/img/design/btn-loading.gif
 /static/img/design/home.png
 /static/img/design/ico-direction.png
 /static/img/design/ico-stops.png
 /static/img/design/loading.gif
+/static/img/design/startup-320x460.png
+/static/img/design/startup-640x1096.png
+/static/img/design/startup-640x920.png
 /static/img/ios/activity-indicator.png
 /static/img/ios/back-button-5.png
 /static/img/ios/back-button-active-5.png
@@ -72,3 +76,8 @@ NETWORK:
 /api/
 http://*
 https://*
+http://www.google-analytics.com/ga.js
+http://maps.google.com/maps/api/
+http://maps.gstatic.com/
+http://maps.googleapis.com/
+http://csi.gstatic.com/
