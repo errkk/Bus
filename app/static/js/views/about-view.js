@@ -12,15 +12,14 @@ define([
 
             initialize: function() {
                 var self = this;
-                // Cache window selector
-                self.$window = $(window);
                 this.$el = this.options.$el;
                 this.render();
             },
 
             render: function() {
-                var self = this;
-
+                if(window.version) {
+                    this.$('.version').text('v' + window.version);
+                }
             }
 
         });

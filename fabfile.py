@@ -17,11 +17,14 @@ env.user = 'ubuntu'
 BUILD_DIR = 'app/static/'
 
 cache_exempt = [
+    '/api/',
     'http://www.google-analytics.com/ga.js',
     'http://maps.google.com/maps/api/',
     'http://maps.gstatic.com/',
     'http://maps.googleapis.com/',
-    'http://csi.gstatic.com/'
+    'http://csi.gstatic.com/',
+    'http://mt0.googleapis.com/',
+    'http://mt1.googleapis.com/',
 ]
 
 def paths():
@@ -35,10 +38,10 @@ def manifest(branch):
                     capture=True)
     with open(manifest, 'w') as fh:
         fh.write('CACHE MANIFEST\n\n')
-        fh.write('CACHE:\n\n')
         fh.write('# {0}\n'.format(env.timestamp))
         fh.write('# {0}\n'.format(env.branch))
         fh.write('# {0}\n\n'.format(env.rev))
+        fh.write('CACHE:\n')
         for root, dirs, files in walk(BUILD_DIR):
             for filename in files:
                 path = join(root, filename)
@@ -47,9 +50,6 @@ def manifest(branch):
                         rel_path = relpath(path, BUILD_DIR)
                         fh.write('/static/{0}\n'.format(rel_path))
         fh.write('\n\nNETWORK:\n')
-        fh.write('/api/\n')
-        fh.write('http://*\n')
-        fh.write('https://*\n')
         for url in cache_exempt:
             fh.write('{0}\n'.format(url))
     local("cat %s" % manifest)
@@ -57,15 +57,8 @@ def manifest(branch):
 
 def version():
     with cd(env.src_path):
-        with open('version_number.txt', 'r+') as fh:
-            prev = fh.read()
-            print 'Previous version number: {0}'.format(prev)
-        with open('version_number.txt', 'w') as fh:
-            new_version = prompt('New version number?')
-            fh.write(new_version)
-        cmd = """sed -i 's/\<p class\=\"foot-label version\"\>(.*)\<\/p\>/\<p class\=\"foot-label version\"\>{0}\<\/p\>/g' app/views/index.html""".format(new_version)
-        print cmd
-        run('echo "{0}" > app/static/version_number.txt'.format(new_version))
+        new_version = prompt('New version number?')
+        run('echo "window.version=\'{0}\';" > app/static/js/version.js'.format(new_version))
 
 
 def stage():
