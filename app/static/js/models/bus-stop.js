@@ -8,7 +8,6 @@ define([
     ],
     function(_, Backbone, arrivalsView) {
         var Model = Backbone.Model.extend({
-            idAttribute: 'id',
             initialize: function() {
                 var self = this;
                 this.createMarker();

@@ -6,12 +6,13 @@ define([
         'underscore',
         'backbone',
         'collections/bus-stops',
+        'collections/favs',
         'tracking'
     ],
-    function($, _, Backbone, busStops, tracking) {
+    function($, _, Backbone, busStopsCollection, favsCollection, tracking) {
         var View = Backbone.View.extend({
             childViews: [],
-            collection: busStops,
+            collection: busStopsCollection,
             coords: {'latutude': 51.3, 'longitude': -0.091},
             errors: {},
             has_tilesloaded: false,
@@ -113,7 +114,7 @@ define([
                         callback(pos.coords);
                     },
                     // Errback
-                    function() {
+                    function(err) {
                         if(err.code==1){
                             alert("User denied geolocation.");
                         }else if(err.code==2){
