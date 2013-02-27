@@ -15,6 +15,8 @@ define([
                 417: 'No bus stops found in this range',
                 400: 'Bad Request'
             },
+            initialize: function() {
+            },
             url: function() {
                 if(!this.busStopId) {
                     console.error('No Bus stop ID');

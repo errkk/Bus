@@ -6,10 +6,9 @@ define([
         'underscore',
         'backbone',
         'collections/bus-stops',
-        'collections/favs',
         'tracking'
     ],
-    function($, _, Backbone, busStopsCollection, favsCollection, tracking) {
+    function($, _, Backbone, busStopsCollection, tracking) {
         var View = Backbone.View.extend({
             childViews: [],
             collection: busStopsCollection,

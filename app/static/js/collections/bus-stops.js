@@ -60,6 +60,6 @@ define([
                 tracking.trackEvent('Error', 'Cant fetch busstops', '');
             }
         });
-        return new Collection();
+        return new Collection([new Model({'name':'something'})]);
     }
 );

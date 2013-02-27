@@ -1,11 +1,11 @@
 /**
- * View: List
+ * View: Favs
  */
 define([
         'jquery',
         'underscore',
         'backbone',
-        'collections/bus-stops'
+        'collections/favs'
     ],
     function($, _, Backbone, collection) {
         var View = Backbone.View.extend({
@@ -32,7 +32,6 @@ define([
                     });
                     $list.append(html);
                 });
-
             }
 
         });

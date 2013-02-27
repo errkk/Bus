@@ -6,11 +6,11 @@ define([
         'views/about-view',
         'views/arrival-view',
         'views/list-view',
-        'collections/favs',
+        'views/favs-view',
         'collections/bus-stops',
         'tracking'
     ],
-    function($, _, Backbone, HomeView, AboutView, ArrivalView, ListView, favsCollection, busStopsCollection, tracking) {
+    function($, _, Backbone, HomeView, AboutView, ArrivalView, ListView, FavsView, busStopsCollection, tracking) {
 
         var body = document.body,
             flipWise = {
@@ -102,8 +102,7 @@ define([
                     listView = new ListView({
                         $el: $('#view-list')
                     }),
-                    favsView = new ListView({
-                        collection: favsCollection,
+                    favsView = new FavsView({
                         $el: $('#view-favs')
                     });
                 body.insertAdjacentHTML('beforeend', isWideScreen ? '<div id="overlay" class="hide"></div>' : '<header class="fake"></header>');
