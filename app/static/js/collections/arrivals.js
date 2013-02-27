@@ -11,11 +11,10 @@ define([
     function($, _, Backbone, Model, tracking) {
         var Collection = Backbone.Collection.extend({
             model: Model,
+            comparator: 'estimatedTime',
             responses: {
                 417: 'No bus stops found in this range',
                 400: 'Bad Request'
-            },
-            initialize: function() {
             },
             url: function() {
                 if(!this.busStopId) {

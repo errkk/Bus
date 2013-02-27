@@ -10,7 +10,11 @@ define([
     ],
     function($, _, Backbone, BaseList, collection) {
         var View = BaseList.extend({
-            collection: collection
+            collection: collection,
+            initialize: function() {
+                BaseList.prototype.initialize.call(this);
+            }
+
         });
         return View;
     }

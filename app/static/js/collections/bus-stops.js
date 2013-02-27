@@ -20,7 +20,7 @@ define([
             url: function() {
                 var lat = this.lat || 51.5,
                     lng = this.lng || -0.1;
-                return '/api/?Circle=' + lat + ',' + lng + ',250&StopPointState=0&ReturnList=StopID,StopPointName,StopPointIndicator,Towards,Latitude,Longitude';
+                return '/api/?Circle=' + lat + ',' + lng + ',450&StopPointState=0&ReturnList=StopID,StopPointName,StopPointIndicator,Towards,Latitude,Longitude';
             },
             fetch: function() {
                 var self = this;
@@ -56,7 +56,6 @@ define([
                 tracking.trackEvent('Map', 'Found Stops', results);
             },
             error: function(err) {
-                console.log('error CB', arguments);
                 tracking.trackEvent('Error', 'Cant fetch busstops', '');
             }
         });
