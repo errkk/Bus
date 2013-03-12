@@ -18,6 +18,11 @@ define([
 
             },
 
+            /**
+             * Make an image in a canvas to be the marker
+             * Display the indicator number in the middle
+             * This creates images at double size for retina use
+             */
             createMarkerCanvas: function(indicator, width, height) {
                 var canvas = document.createElement('canvas'),
                     context = canvas.getContext('2d'),
