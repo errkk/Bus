@@ -17,6 +17,59 @@ define([
                 });
 
             },
+
+            createMarkerCanvas: function(indicator) {
+                var canvas = document.createElement('canvas'),
+                    context = canvas.getContext('2d'),
+                    radius = 10,
+                    width = 21,
+                    height = 25,
+                    indicator = indicator || '';
+
+                if(indicator.length > 1) {
+                    width = 26;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                context.clearRect(0, 0, width, height);
+                context.fillStyle = "rgba(255, 0, 0, 1)";
+                context.strokeStyle = "rgba(180, 0, 0, 1)";
+
+                context.beginPath();
+                context.moveTo(radius, 0);
+                context.lineTo(width - radius, 0);
+                context.quadraticCurveTo(width, 0, width, radius);
+                context.lineTo(width, height - radius);
+                context.quadraticCurveTo(width, height, width - radius, height);
+                context.lineTo(radius, height);
+                context.quadraticCurveTo(0, height, 0, height - radius);
+                context.lineTo(0, radius);
+                context.quadraticCurveTo(0, 0, radius, 0);
+                context.closePath();
+
+                context.fill();
+                context.stroke();
+
+                context.fillStyle = "rgba(255, 255, 255, 1)";
+                context.font = 'bold 11pt Helvetica';
+                context.textBaseline  = 'top';
+                //context.textAlign = 'center';
+
+                var textWidth = context.measureText(indicator);
+
+                // centre the text.
+                context.fillText(indicator,
+                    Math.floor((width / 2) - (textWidth.width / 2)),
+                    4
+                );
+
+                console.log(canvas, context);
+
+                return canvas.toDataURL();
+            },
+
             letterOffset: function() {
                 var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
                 try{
@@ -44,7 +97,7 @@ define([
                         title: this.get('name'),
                         id: this.get('id'),
                         letter: this.get('indicator'),
-                        icon: image
+                        icon: this.createMarkerCanvas(this.get('indicator'))
                     });
 
                     google.maps.event.addListener(marker, 'click', function() {

@@ -66,7 +66,6 @@ define([
                     }
                     if(self.tile_interval_count > 15000) {
                         tracking.trackEvent('Map', 'Tiles not loaded in time');
-                        window.location.reload(true);
                     }
                 }, 100);
 
