@@ -15,6 +15,7 @@ require.config({
     paths: {
         text: 'lib/require/text',
         domReady: 'lib/require/domready',
+        localstorage: 'lib/backbone.localStorage',
 
         jquery: 'lib/jquery.1.9.0',
         underscore: 'lib/underscore.amd',

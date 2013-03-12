@@ -4,14 +4,18 @@
 define([
         'underscore',
         'backbone',
-        'lib/backbone-local-storage',
-        'models/fav'
+        'models/fav',
+        'localstorage'
     ],
     function(_, Backbone, Model) {
         var Collection = Backbone.Collection.extend({
             model: Model,
             localStorage: new Backbone.LocalStorage('fav_bus_stops'),
-
+            initialize: function() {
+                this.reset(this.localStorage.findAll());
+                this.trigger('update');
+                console.log(this.prototype);
+            },
             /**
              * Add the current busstop object to the collection
              */
@@ -20,7 +24,6 @@ define([
                 var model = window.busStop.clone();
                 this.add(model);
                 model.save();
-                console.log(model);
                 this.trigger('update');
             }
         });

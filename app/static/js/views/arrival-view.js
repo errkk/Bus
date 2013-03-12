@@ -51,6 +51,8 @@ define([
                 if(window.busStop) {
                     self.$('h1').text(window.busStop.get('name'));
                     self.$('.btn-fav').fadeIn();
+                }else{
+                    self.$('h1').text('Arrivals');
                 }
 
             },
