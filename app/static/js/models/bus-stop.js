@@ -18,23 +18,19 @@ define([
 
             },
 
-            createMarkerCanvas: function(indicator) {
+            createMarkerCanvas: function(indicator, width, height) {
                 var canvas = document.createElement('canvas'),
                     context = canvas.getContext('2d'),
-                    radius = 10,
-                    width = 21,
-                    height = 25,
-                    indicator = indicator || '';
-
-                if(indicator.length > 1) {
-                    width = 26;
-                }
+                    radius = 20,
+                    width = width * 2,
+                    height = height * 2;
 
                 canvas.width = width;
                 canvas.height = height;
 
                 context.clearRect(0, 0, width, height);
                 context.fillStyle = "rgba(255, 0, 0, 1)";
+                context.lineWidth = 2;
                 context.strokeStyle = "rgba(180, 0, 0, 1)";
 
                 context.beginPath();
@@ -53,9 +49,8 @@ define([
                 context.stroke();
 
                 context.fillStyle = "rgba(255, 255, 255, 1)";
-                context.font = 'bold 11pt Helvetica';
+                context.font = 'bold 22pt Helvetica';
                 context.textBaseline  = 'top';
-                //context.textAlign = 'center';
 
                 var textWidth = context.measureText(indicator);
 
@@ -65,28 +60,18 @@ define([
                     4
                 );
 
-                console.log(canvas, context);
-
                 return canvas.toDataURL();
             },
 
-            letterOffset: function() {
-                var letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-                try{
-                    var number = letters.indexOf(this.get('indicator'));
-                    if(number >= 0) {
-                        return number * 26;
-                    }else{
-                        return 0;
-                    }
-                }catch(err){}
-            },
             createMarker: function() {
                 var self = this,
+                    indicator = this.get('indicator') || '',
+                    width = (indicator.length > 1) ? 26 : 20,
+                    height = 20,
                     image = new google.maps.MarkerImage(
-                        '/static/img/design/ico-stops.png',
-                        new google.maps.Size(21, 26), // Size
-                        new google.maps.Point(0, this.letterOffset()) // Origin
+                        this.createMarkerCanvas(indicator, width, height),
+                        null, null, null,
+                        new google.maps.Size(width, height)
                     ),
 
                     gLatLng = new google.maps.LatLng(this.get('lat'), this.get('lng')),
@@ -96,8 +81,8 @@ define([
                         map: window.map,
                         title: this.get('name'),
                         id: this.get('id'),
-                        letter: this.get('indicator'),
-                        icon: this.createMarkerCanvas(this.get('indicator'))
+                        letter: indicator,
+                        icon: image
                     });
 
                     google.maps.event.addListener(marker, 'click', function() {
