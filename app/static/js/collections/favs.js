@@ -13,8 +13,6 @@ define([
             localStorage: new Backbone.LocalStorage('fav_bus_stops'),
             initialize: function() {
                 this.reset(this.localStorage.findAll());
-                this.trigger('update');
-                console.log(this.prototype);
             },
             /**
              * Add the current busstop object to the collection

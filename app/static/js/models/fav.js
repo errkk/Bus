@@ -12,9 +12,8 @@ define([
                 // Click from google map
                 this.on('activate', function(){
                     window.location.hash = 'countdown/' + this.get('id');
-                    window.busStop = this;
+                    window.busStop = this.clone();
                 });
-                console.log(this.get('name'));
             }
         });
 
