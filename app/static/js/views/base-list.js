@@ -5,11 +5,11 @@ define([
         'jquery',
         'underscore',
         'backbone',
+        'views/row-view'
     ],
-    function($, _, Backbone) {
+    function($, _, Backbone, RowView) {
         var View = Backbone.View.extend({
             childViews: [],
-            template: _.template($('#listRow').html()),
 
             initialize: function() {
                 _.bindAll(this, 'render');
@@ -22,13 +22,9 @@ define([
                 $list = this.$('.tableview');
                 $list.html('');
                 _(this.collection.models).each(function(model) {
-                    var html = self.template({
-                        indicator: model.get('indicator', ''),
-                        name: model.get('name'),
-                        id: model.get('id'),
-                        towards: model.get('towards')
-                    });
-                    $list.append(html);
+                    var itemView = new RowView({model: model});
+                    $list.append(itemView.render().el);
+                    self.childViews.push(itemView);
                 });
             }
         });

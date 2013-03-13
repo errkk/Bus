@@ -14,6 +14,7 @@ define([
             initialize: function() {
                 this.reset(this.localStorage.findAll());
             },
+
             /**
              * Add the current busstop object to the collection
              */
