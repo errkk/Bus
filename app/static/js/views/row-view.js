@@ -11,15 +11,15 @@ define([
             template: _.template($('#listRow').html()),
 
             events: {
-                'click .detail-disclosure-button': 'click'
+                'click .detail-disclosure-button': 'deletefav'
             },
 
             initialize: function() {
-                _.bindAll(this, 'click');
+                _.bindAll(this, 'deletefav');
                 this.model = this.options.model;
             },
 
-            click: function(evt) {
+            deletefav: function(evt) {
                 evt.preventDefault();
                 this.model.collection.remove(this.model);
             },
