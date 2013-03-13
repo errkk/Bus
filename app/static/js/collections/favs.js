@@ -16,6 +16,17 @@ define([
             },
 
             /**
+             * Remove the passed model from the collection and
+             * from local storage
+             */
+            remove: function(model) {
+                Backbone.Collection.prototype.remove.call(this, model);
+                this.localStorage.destroy(model);
+                this.trigger('update');
+                return this;
+            },
+
+            /**
              * Add the current busstop object to the collection
              */
             addCurrent: function() {

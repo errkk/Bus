@@ -15,14 +15,13 @@ define([
             },
 
             initialize: function() {
-                console.log(this);
                 _.bindAll(this, 'click');
                 this.model = this.options.model;
             },
 
             click: function(evt) {
                 evt.preventDefault();
-                console.log('Click');
+                this.model.collection.remove(this.model);
             },
 
             render: function() {
