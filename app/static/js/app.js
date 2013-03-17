@@ -110,6 +110,7 @@ define([
                 var Router = Backbone.Router.extend({
                     routes: {
                         '': 'main',
+                        'map': 'main',
                         'about': 'about',
                         'countdown/:id': 'countdown',
                         'list': 'list',
@@ -131,6 +132,8 @@ define([
                                 }
                             });
                         }
+                        window.prev = window.prev || [];
+                        window.prev.push('map');
                     },
                     about: function() {
                         flip({
@@ -143,6 +146,8 @@ define([
                                 tracking.trackPageView('about');
                             }
                         });
+                        window.prev = window.prev || [];
+                        window.prev.push('about');
                     },
                     countdown: function(id) {
                         var direction = 'clockwise';
@@ -161,6 +166,8 @@ define([
                                 tracking.trackPageView('countdown/' + id);
                             }
                         });
+                        window.prev = window.prev || [];
+                        window.prev.push('countdown');
                     },
                     list: function() {
                         flip({
@@ -173,6 +180,8 @@ define([
                                 tracking.trackPageView('list');
                             }
                         });
+                        window.prev = window.prev || [];
+                        window.prev.push('list');
                     },
                     favs: function() {
                         flip({
@@ -185,6 +194,8 @@ define([
                                 tracking.trackPageView('favourites');
                             }
                         });
+                        window.prev = window.prev || [];
+                        window.prev.push('favs');
                     }
                 });
 

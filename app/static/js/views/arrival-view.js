@@ -13,6 +13,10 @@ define([
             childViews: [],
             template: _.template($('#stopRow').html()),
 
+            events: {
+                'click .header-button-back': 'goBack'
+            },
+
             initialize: function() {
                 var self = this;
                 // Cache window selector
@@ -33,6 +37,12 @@ define([
                 });
 
                 self.$('.btn-fav').hide();
+            },
+
+            goBack: function(evt) {
+                evt.preventDefault();
+                var last = window.prev[window.prev.length -2];
+                window.location.hash = last;
             },
 
             render: function() {

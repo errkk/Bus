@@ -80,14 +80,20 @@ define([
 
                 // Find busstops when the map is doubleclicked
                 google.maps.event.addListener(window.map, 'dblclick', function(evt){
-                    self.findBusStops(evt.latLng.lat(), evt.latLng.lng());
+                    var res = self.findBusStops(evt.latLng.lat(), evt.latLng.lng(), function() {
+                        alert('Can\'t find any bus stops near here');
+                    });
                 });
 
                 // Get location from device, and centre map
                 self.getLocation(function(coords){
                     self.coords = coords;
-                    self.findBusStops(coords.latitude, coords.longitude);
-                    self.centreMap();
+                    self.findBusStops(coords.latitude, coords.longitude, function() {
+                        alert('Can\'t find any bus stops near you, are you sure you\'re in London?');
+                    });
+                    if(window.map){
+                        self.centreMap();
+                    }
                 });
             },
 
@@ -133,10 +139,13 @@ define([
             /**
              * Find busstops near the current location
              */
-            findBusStops: function(lat, lng) {
+            findBusStops: function(lat, lng, error) {
                 this.collection.lat = lat;
                 this.collection.lng = lng;
-                this.collection.fetch();
+                if('function' === typeof error) {
+                    this.collection.error = error;
+                }
+                return this.collection.fetch();
             }
 
         });

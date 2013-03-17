@@ -24,7 +24,7 @@ define([
             },
             fetch: function() {
                 var self = this;
-                $.ajax({
+                return $.ajax({
                     type: 'GET',
                     url: this.url(),
                     dataType: 'html'
@@ -56,6 +56,7 @@ define([
                 tracking.trackEvent('Map', 'Found Stops', results);
             },
             error: function(err) {
+                throw('Cant Find bus stops here');
                 tracking.trackEvent('Error', 'Cant fetch busstops', '');
             }
         });
