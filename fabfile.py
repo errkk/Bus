@@ -25,6 +25,7 @@ cache_exempt = [
     'http://csi.gstatic.com/',
     'http://mt0.googleapis.com/',
     'http://mt1.googleapis.com/',
+    'http://www.google-analytics.com/',
 ]
 
 def paths():

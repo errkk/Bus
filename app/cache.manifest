@@ -1,8 +1,8 @@
 CACHE MANIFEST
 
-# 1363524104
+# 1363524772
 # develop
-# d8e75b6a4ccfce00a86657f488753e3a12690727
+# 15e753866e1822536d86d8057977a518b9752a95
 
 CACHE:
 /static/favicon.ico
@@ -89,3 +89,4 @@ http://maps.googleapis.com/
 http://csi.gstatic.com/
 http://mt0.googleapis.com/
 http://mt1.googleapis.com/
+http://www.google-analytics.com/
