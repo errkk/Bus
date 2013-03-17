@@ -102,7 +102,7 @@ define([
              */
             centreMap: function() {
                 var centre = new google.maps.LatLng(this.coords.latitude, this.coords.longitude);
-                if( window.map ){
+                if(window.map){
                     window.map.panTo(centre);
                 }
             },

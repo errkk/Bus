@@ -1,8 +1,8 @@
 CACHE MANIFEST
 
-# 1363124949
+# 1363524104
 # develop
-# 99f0776b4567f6476315db60b6bba48961685834
+# d8e75b6a4ccfce00a86657f488753e3a12690727
 
 CACHE:
 /static/favicon.ico
@@ -59,8 +59,8 @@ CACHE:
 /static/js/collections/arrivals.js
 /static/js/collections/bus-stops.js
 /static/js/collections/favs.js
-/static/js/lib/backbone-local-storage.js
 /static/js/lib/backbone.amd.js
+/static/js/lib/backbone.localStorage.js
 /static/js/lib/jquery.1.9.0.js
 /static/js/lib/underscore.amd.js
 /static/js/lib/require/domready.js
@@ -75,6 +75,7 @@ CACHE:
 /static/js/views/favs-view.js
 /static/js/views/home-view.js
 /static/js/views/list-view.js
+/static/js/views/row-view.js
 /static/less/main.less
 /static/less/modules/type.less
 
