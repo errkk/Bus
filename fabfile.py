@@ -1,19 +1,67 @@
+import os
 import time
-from os.path import join, relpath
-from os import walk
-from fabric.api import env, run, local, cd, sudo
-from fabric.decorators import hosts
+from fabric.api import env, run, sudo, local, cd
+from fabric.state import output
 from fabric.utils import puts
+from fabric.colors import blue, green, yellow
 from fabric.operations import prompt
-from pprint import pprint as pp
-from time import strftime
-from datetime import datetime
 
+from velcro.env import bootstrap as _bootstrap
+from velcro.decorators import pre_hooks, post_hooks
+from velcro.http.nginx import (restart_nginx, reload_nginx, stop_nginx,
+                               start_nginx)
+from velcro.service.upstart import install, start, stop, restart, restart_all
+from velcro.scm.git import deploy as _deploy
+from velcro.target import live, stage
+from velcro.py.django import syncdb, migrate
+from velcro.conf import settings
+
+
+# Silence Output
+output['running'] = False
+
+# Project Details
+env.client = 'me'
 env.project = 'busapp'
-env.root = '/e/data/www/me/%s' % env.project
-env.env = '/e/data/python-virtualenvs/busapp-%s'
-env.hosts = ['web2.errkk.co']
-env.user = 'ubuntu'
+
+# Paths & Directories
+env.root_path = '/e/data/www/'
+env.directories = {
+    'media': None, 'static': None, 'logs': None, 'src': None,
+}
+
+# Users
+env.user = 'root'
+env.sudo_user = 'root'
+
+# Version Control
+env.scm = 'git'
+
+# Hosts to deploy too
+env.hosts = [
+    'web3.errkk.co',
+]
+
+# HTTP Server
+env.http_server_conf_path = '/etc/nginx/'
+env.nginx_conf = 'nginx.conf'
+
+# Python Settings
+env.py_venv_base = '/e/data/python-virtualenvs'
+env.py_venv_name = lambda: '{project}_{target}'.format(
+    project=settings.PROJECT(),
+    target=settings.TARGET())
+
+# Django Settings
+env.django_settings_module = '{project}.config.{target}.settings'
+
+# Upstart Scripts
+env.upstart_scripts = ['gunicorn.conf']
+
+env.config_path_pipeline = [
+    'config',
+    '{target}',
+]
 BUILD_DIR = 'app/static/'
 
 cache_exempt = [
@@ -28,10 +76,33 @@ cache_exempt = [
     'http://www.google-analytics.com/',
 ]
 
-def paths():
-    pp( env )
+
+@post_hooks(
+    'velcro.http.nginx.symlink')
+def bootstrap():
+    _bootstrap()
+
+
+@post_hooks(
+    'velcro.scm.git.clean',
+    'velcro.http.nginx.symlink',
+)
+def deploy(branch, **kwargs):
+    _deploy(branch)
+    manifest(branch)
+    #version()
+
+
+def version():
+    """ Writes the new verion number onto the server """
+    with cd(settings.SRC_PATH()):
+        new_version = prompt('New version number?')
+        run('echo "window.version=\'{0}\';" > app/static/js/version.js'
+            .format(new_version))
+
 
 def manifest(branch):
+    """ Generates the cache manifest locally """
     env.timestamp = str(int(time.time()))
     env.branch = branch
     manifest = 'app/cache.manifest'
@@ -43,79 +114,14 @@ def manifest(branch):
         fh.write('# {0}\n'.format(env.branch))
         fh.write('# {0}\n\n'.format(env.rev))
         fh.write('CACHE:\n')
-        for root, dirs, files in walk(BUILD_DIR):
+        for root, dirs, files in os.walk(BUILD_DIR):
             for filename in files:
-                path = join(root, filename)
+                path = os.path.join(root, filename)
                 if filename[0] != '.':
                     if path != manifest:
-                        rel_path = relpath(path, BUILD_DIR)
+                        rel_path = os.path.relpath(path, BUILD_DIR)
                         fh.write('/static/{0}\n'.format(rel_path))
         fh.write('\n\nNETWORK:\n')
         for url in cache_exempt:
             fh.write('{0}\n'.format(url))
     local("cat %s" % manifest)
-
-
-def version():
-    with cd(env.src_path):
-        new_version = prompt('New version number?')
-        run('echo "window.version=\'{0}\';" > app/static/js/version.js'.format(new_version))
-
-
-def stage():
-    env.target = 'stage'
-    env.src_path = join(env.root, '%(project)s_%(target)s' % env, 'src')
-    env.env = env.env % env.target
-    env.t = str(int(time.time()))
-
-
-def live():
-    env.target = 'live'
-    env.src_path = join(env.root, '%(project)s_%(target)s' % env, 'src')
-    env.env = env.env % env.target
-    env.t = str(int(time.time()))
-
-
-def git_push(branch):
-    env.timestamp = str(int(time.time()))
-    nice_time = datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
-    env.branch = branch
-    env.rev = local('git log -1 --format=format:%%H %s@{0}' % env.branch,
-                    capture=True)
-    local('git push -f ssh://%(user)s@%(host)s/%(src_path)s/ %(branch)s' % env)
-
-    with cd(env.src_path):
-        run('git reset --hard %(rev)s' % env)
-        run('echo "{0}\n{1}" > app/version.txt'.format(env.rev, nice_time))
-
-    version()
-
-
-
-def link_nginx():
-    conf_path = join(env.src_path, 'config', env.target,
-                     'nginx.conf')
-    nginx_available = join('/','etc','nginx','sites-available', 
-                        '%(project)s_%(target)s.conf' % env)
-
-    nginx_enabled = join('/','etc','nginx','sites-enabled', 
-                        '%(project)s_%(target)s.conf' % env)
-
-    sudo('ln -s %s %s && ln -s %s %s' % (conf_path, nginx_available, 
-            nginx_available, nginx_enabled))
-
-
-def deploy(branch):
-    git_push(branch)
-
-
-def restart():
-    restart_nginx()
-
-
-def restart_nginx():
-    sudo('/etc/init.d/nginx configtest && /etc/init.d/nginx restart')
-
-
-def reload_nginx():
-    sudo('/etc/init.d/nginx configtest && /etc/init.d/nginx reload')
